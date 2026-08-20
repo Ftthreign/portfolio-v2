@@ -1,0 +1,37 @@
+{{ define "content" }}
+<div class="header-bar">
+    <div>
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem;">Dashboard Ringkasan</h2>
+        <p style="font-size: 0.85rem; opacity: 0.7; margin-top: 0.2rem;">Selamat datang di CMS Admin Portfolio kamu.</p>
+    </div>
+</div>
+
+<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.5rem; margin-bottom: 2.5rem;">
+    <div class="card" style="margin: 0;">
+        <span style="font-size: 0.75rem; font-weight: 600; uppercase; letter-spacing: 0.05em; opacity: 0.7;">Total Proyek</span>
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-top: 0.5rem;">{{ .ProjectCount }}</h3>
+        <a href="/cms/projects" style="font-size: 0.8rem; color: var(--terracotta); text-decoration: none; display: inline-block; margin-top: 0.5rem;">Kelola Proyek &rarr;</a>
+    </div>
+
+    <div class="card" style="margin: 0;">
+        <span style="font-size: 0.75rem; font-weight: 600; uppercase; letter-spacing: 0.05em; opacity: 0.7;">Artikel Blog</span>
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-top: 0.5rem;">{{ .BlogCount }}</h3>
+        <a href="/cms/blog" style="font-size: 0.8rem; color: var(--terracotta); text-decoration: none; display: inline-block; margin-top: 0.5rem;">Kelola Blog &rarr;</a>
+    </div>
+
+    <div class="card" style="margin: 0;">
+        <span style="font-size: 0.75rem; font-weight: 600; uppercase; letter-spacing: 0.05em; opacity: 0.7;">Pesan Masuk</span>
+        <h3 style="font-family: 'Playfair Display', serif; font-size: 2.2rem; margin-top: 0.5rem;">{{ .MessageCount }}</h3>
+        <a href="/cms/messages" style="font-size: 0.8rem; color: var(--terracotta); text-decoration: none; display: inline-block; margin-top: 0.5rem;">Lihat Pesan &rarr;</a>
+    </div>
+</div>
+
+<div class="card">
+    <h3 style="font-family: 'Playfair Display', serif; font-size: 1.2rem; margin-bottom: 1rem;">Status Sistem</h3>
+    <p style="font-size: 0.9rem; line-height: 1.6;">
+        - <strong>Database PostgreSQL:</strong> Terhubung (Ready)<br>
+        - <strong>Storage:</strong> Cloudflare R2 Enabled<br>
+        - <strong>Frontend SSR:</strong> Astro TS (Bun Runtime)
+    </p>
+</div>
+{{ end }}

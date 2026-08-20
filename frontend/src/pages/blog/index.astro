@@ -1,0 +1,62 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { fetchBlogPosts } from '../../services/api';
+
+const posts = await fetchBlogPosts();
+---
+
+<BaseLayout title="Blog & Catatan Teknis — Ftthreign" description="Jurnal pengembangan perangkat lunak, arsitektur sistem backend, Go, TypeScript, dan performa web.">
+  <section class="max-w-container mx-auto px-margin-mobile md:px-gutter pt-16 pb-12">
+    <div class="gsap-reveal">
+      <span class="inline-block text-xs font-semibold uppercase tracking-widest text-terracotta bg-terracotta/10 px-3 py-1 rounded mb-4">
+        Journal & Writing
+      </span>
+      <h1 class="font-serif text-3xl md:text-5xl font-bold tracking-tight text-charcoal mb-4">
+        Catatan & Artikel Teknis
+      </h1>
+      <p class="text-base md:text-lg text-charcoal-variant max-w-xl leading-relaxed">
+        Tulisan mengenai arsitektur sistem, optimasi performa, dan pelajaran teknis dari proyek harian.
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-container mx-auto px-margin-mobile md:px-gutter pb-24">
+    {posts.length === 0 ? (
+      <div class="p-12 rounded-lg border border-charcoal/10 bg-cream-container/30 text-center">
+        <p class="font-serif text-lg text-charcoal-variant mb-2">Belum Ada Artikel yang Dipublikasikan</p>
+        <p class="text-xs text-charcoal-variant/70">Tambahkan artikel baru melalui CMS Admin Panel.</p>
+      </div>
+    ) : (
+      <div class="space-y-8">
+        {posts.map((post) => (
+          <article class="gsap-reveal p-6 md:p-8 rounded-lg border border-charcoal/10 bg-cream-highest/20 hover:border-charcoal/30 transition-all duration-200">
+            <a href={`/blog/${post.slug}`} class="block">
+              <div class="flex items-center gap-4 text-xs text-charcoal-variant mb-3">
+                <span class="font-semibold uppercase text-terracotta">{post.reading_time_minutes} min read</span>
+                {post.published_at && (
+                  <>
+                    <span>&bull;</span>
+                    <span>{new Date(post.published_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+                  </>
+                )}
+              </div>
+              <h2 class="font-serif text-2xl font-semibold text-charcoal hover:text-terracotta transition-colors mb-3">
+                {post.title}
+              </h2>
+              <p class="text-base text-charcoal-variant leading-relaxed line-clamp-3 mb-4">
+                {post.excerpt}
+              </p>
+              <div class="flex flex-wrap gap-2">
+                {post.tags?.map((tag) => (
+                  <span class="text-xs font-mono bg-sage/10 text-sage-dark px-2.5 py-1 rounded">
+                    #{tag}
+                  </span>
+                ))}
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    )}
+  </section>
+</BaseLayout>

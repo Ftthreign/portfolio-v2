@@ -1,0 +1,119 @@
+{{ define "content" }}
+<div class="header-bar">
+    <div>
+        <h2 style="font-family: 'Playfair Display', serif; font-size: 1.8rem;">Manajemen Proyek</h2>
+        <p style="font-size: 0.85rem; opacity: 0.7; margin-top: 0.2rem;">Tambah, edit, dan hapus studi kasus proyek portfolio kamu.</p>
+    </div>
+    <button onclick="document.getElementById('projectModal').style.display='block'" class="btn">+ Tambah Proyek Baru</button>
+</div>
+
+<div class="card" style="padding: 0; overflow: hidden;">
+    <table>
+        <thead>
+            <tr>
+                <th>Judul Proyek</th>
+                <th>Slug</th>
+                <th>Tech Stack</th>
+                <th>Status</th>
+                <th>Aksi</th>
+            </tr>
+        </thead>
+        <tbody>
+            {{ range .Projects }}
+            <tr>
+                <td style="font-weight: 600;">{{ .Title }}</td>
+                <td><code style="font-size: 0.8rem; background: rgba(45,45,45,0.05); padding: 0.2rem 0.4rem; border-radius: 4px;">{{ .Slug }}</code></td>
+                <td>
+                    {{ range .TechStack }}
+                    <span style="font-size: 0.75rem; background: rgba(138, 154, 91, 0.15); color: #253100; padding: 0.1rem 0.4rem; border-radius: 3px; margin-right: 0.2rem;">{{ . }}</span>
+                    {{ end }}
+                </td>
+                <td>
+                    {{ if .Published }}
+                    <span style="font-size: 0.75rem; background: rgba(138, 154, 91, 0.2); color: #253100; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px;">Published</span>
+                    {{ else }}
+                    <span style="font-size: 0.75rem; background: rgba(45, 45, 45, 0.1); color: #444748; font-weight: 600; padding: 0.2rem 0.5rem; border-radius: 4px;">Draft</span>
+                    {{ end }}
+                </td>
+                <td>
+                    <form action="/cms/projects/delete" method="POST" style="display:inline;" onsubmit="return confirm('Yakin ingin menghapus proyek ini?')">
+                        <input type="hidden" name="id" value="{{ .ID }}">
+                        <button type="submit" style="background: transparent; color: #ba1a1a; border: none; font-size: 0.8rem; font-weight: 600; cursor: pointer;">Hapus</button>
+                    </form>
+                </td>
+            </tr>
+            {{ else }}
+            <tr>
+                <td colspan="5" style="text-align: center; padding: 2rem; opacity: 0.6;">Belum ada proyek yang dibuat. Klik "+ Tambah Proyek Baru" di atas.</td>
+            </tr>
+            {{ end }}
+        </tbody>
+    </table>
+</div>
+
+<!-- Modal Form Tambah Proyek -->
+<div id="projectModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 999;">
+    <div style="background: #FDFCF0; width: 90%; max-width: 650px; margin: 3rem auto; padding: 2rem; border-radius: 8px; max-height: 85vh; overflow-y: auto;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+            <h3 style="font-family: 'Playfair Display', serif; font-size: 1.4rem;">Tambah Proyek Baru</h3>
+            <button onclick="document.getElementById('projectModal').style.display='none'" style="background: none; border: none; font-size: 1.2rem; cursor: pointer;">&times;</button>
+        </div>
+
+        <form action="/cms/projects/save" method="POST" onsubmit="syncQuillContent()">
+            <label>Judul Proyek</label>
+            <input type="text" name="title" required placeholder="Contoh: E-Commerce Platform">
+
+            <label>Deskripsi Singkat (Ringkasan)</label>
+            <textarea name="short_description" rows="2" placeholder="Ringkasan 1-2 kalimat..."></textarea>
+
+            <label>Deskripsi Lengkap (WYSIWYG Editor)</label>
+            <div id="quillEditor" class="editor-container"></div>
+            <input type="hidden" name="full_description" id="fullDescriptionInput">
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label>URL Gambar Cover (Cloudflare R2)</label>
+                    <input type="url" name="cover_image_url" placeholder="https://pub-xxx.r2.dev/cover.jpg">
+                </div>
+                <div>
+                    <label>Tech Stack (Pisahkan dengan koma)</label>
+                    <input type="text" name="tech_stack" placeholder="Go, Astro, PostgreSQL">
+                </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                <div>
+                    <label>URL Repository (GitHub)</label>
+                    <input type="url" name="repo_url" placeholder="https://github.com/...">
+                </div>
+                <div>
+                    <label>URL Live Preview</label>
+                    <input type="url" name="live_url" placeholder="https://...">
+                </div>
+            </div>
+
+            <div style="margin-bottom: 1.5rem;">
+                <label style="display: inline-flex; align-items: center; gap: 0.5rem; cursor: pointer; text-transform: none;">
+                    <input type="checkbox" name="published" value="true" checked style="width: auto; margin: 0;"> Publikasikan Proyek Ini
+                </label>
+            </div>
+
+            <div style="display: flex; justify-content: flex-end; gap: 0.5rem;">
+                <button type="button" onclick="document.getElementById('projectModal').style.display='none'" class="btn btn-secondary">Batal</button>
+                <button type="submit" class="btn">Simpan Proyek</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    var quill = new Quill('#quillEditor', {
+        theme: 'snow',
+        placeholder: 'Tulis deskripsi proyek, arsitektur, dan tantangan teknis disini...'
+    });
+
+    function syncQuillContent() {
+        document.getElementById('fullDescriptionInput').value = quill.root.innerHTML;
+    }
+</script>
+{{ end }}

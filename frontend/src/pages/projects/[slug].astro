@@ -1,0 +1,63 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { fetchProjectBySlug } from '../../services/api';
+
+const { slug } = Astro.params;
+const project = slug ? await fetchProjectBySlug(slug) : null;
+
+if (!project) {
+  return Astro.redirect('/404');
+}
+---
+
+<BaseLayout title={`${project.title} — Detail Proyek`} description={project.short_description}>
+  <article class="max-w-container mx-auto px-margin-mobile md:px-gutter pt-12 pb-24">
+    <!-- Back Button -->
+    <a href="/projects" class="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-charcoal-variant hover:text-terracotta transition-colors mb-8">
+      &larr; Kembali ke Daftar Proyek
+    </a>
+
+    <!-- Header -->
+    <header class="mb-10">
+      <h1 class="font-serif text-3xl md:text-5xl font-bold text-charcoal leading-tight mb-4">
+        {project.title}
+      </h1>
+      <p class="text-lg text-charcoal-variant leading-relaxed max-w-2xl">
+        {project.short_description}
+      </p>
+
+      <div class="flex flex-wrap items-center gap-3 mt-6 pt-6 border-t border-charcoal/10">
+        <span class="text-xs font-semibold uppercase tracking-wider text-charcoal-variant">Stack:</span>
+        {project.tech_stack?.map((tech) => (
+          <span class="text-xs font-mono bg-sage/10 text-sage-dark px-2.5 py-1 rounded">
+            {tech}
+          </span>
+        ))}
+      </div>
+
+      <!-- Action Links -->
+      <div class="flex flex-wrap items-center gap-4 mt-6">
+        {project.live_url && (
+          <a href={project.live_url} target="_blank" class="bg-charcoal text-cream font-medium px-5 py-2.5 rounded text-xs uppercase tracking-wider hover:bg-terracotta transition-colors">
+            Live Preview ↗
+          </a>
+        )}
+        {project.repo_url && (
+          <a href={project.repo_url} target="_blank" class="border border-charcoal/20 text-charcoal font-medium px-5 py-2.5 rounded text-xs uppercase tracking-wider hover:border-charcoal transition-colors">
+            Source Code (GitHub) ↗
+          </a>
+        )}
+      </div>
+    </header>
+
+    <!-- Cover Image -->
+    {project.cover_image_url && (
+      <div class="aspect-video w-full rounded-lg overflow-hidden border border-charcoal/10 bg-cream-container mb-12">
+        <img src={project.cover_image_url} alt={project.title} class="w-full h-full object-cover" />
+      </div>
+    )}
+
+    <!-- Full Content -->
+    <div class="prose max-w-none text-charcoal-variant leading-relaxed text-base space-y-4" set:html={project.full_description || '<p>Belum ada deskripsi detail.</p>'} />
+  </article>
+</BaseLayout>

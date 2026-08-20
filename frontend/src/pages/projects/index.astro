@@ -1,0 +1,71 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { fetchProjects } from '../../services/api';
+
+const projects = await fetchProjects();
+---
+
+<BaseLayout title="Proyek & Studi Kasus — Ftthreign" description="Katalog lengkap proyek perangkat lunak, aplikasi web, dan studi kasus sistem backend.">
+  <section class="max-w-container mx-auto px-margin-mobile md:px-gutter pt-16 pb-12">
+    <div class="gsap-reveal">
+      <span class="inline-block text-xs font-semibold uppercase tracking-widest text-terracotta bg-terracotta/10 px-3 py-1 rounded mb-4">
+        Portfolio & Work
+      </span>
+      <h1 class="font-serif text-3xl md:text-5xl font-bold tracking-tight text-charcoal mb-4">
+        Semua Proyek
+      </h1>
+      <p class="text-base md:text-lg text-charcoal-variant max-w-xl leading-relaxed">
+        Eksplorasi aplikasi web, sistem backend, dan proyek open-source yang dibangun dengan fokus pada arsitektur dan performa.
+      </p>
+    </div>
+  </section>
+
+  <section class="max-w-container mx-auto px-margin-mobile md:px-gutter pb-24">
+    {projects.length === 0 ? (
+      <div class="p-12 rounded-lg border border-charcoal/10 bg-cream-container/30 text-center">
+        <p class="font-serif text-lg text-charcoal-variant mb-2">Belum Ada Proyek yang Dipublikasikan</p>
+        <p class="text-xs text-charcoal-variant/70">Tambahkan proyek baru melalui CMS Admin Panel.</p>
+      </div>
+    ) : (
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        {projects.map((p) => (
+          <article class="gsap-reveal group rounded-lg border border-charcoal/10 bg-cream-highest/20 overflow-hidden hover:border-charcoal/30 transition-all duration-300">
+            <a href={`/projects/${p.slug}`} class="block">
+              <div class="aspect-video bg-cream-container flex items-center justify-center overflow-hidden">
+                {p.cover_image_url ? (
+                  <img src={p.cover_image_url} alt={p.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
+                ) : (
+                  <span class="font-serif text-charcoal-variant/40 text-sm">No Preview Image</span>
+                )}
+              </div>
+              <div class="p-6">
+                <h2 class="font-serif text-xl font-semibold text-charcoal group-hover:text-terracotta transition-colors">
+                  {p.title}
+                </h2>
+                <p class="text-sm text-charcoal-variant mt-2 leading-relaxed line-clamp-2">
+                  {p.short_description}
+                </p>
+                <div class="flex flex-wrap gap-1.5 mt-4">
+                  {p.tech_stack?.map((tech) => (
+                    <span class="text-[11px] font-mono bg-sage/10 text-sage-dark px-2 py-0.5 rounded">
+                      {tech}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </a>
+          </article>
+        ))}
+      </div>
+    )}
+  </section>
+
+  <script>
+    import { gsap, ScrollTrigger } from '../../utils/gsap';
+    document.addEventListener('DOMContentLoaded', () => {
+      gsap.utils.toArray('.gsap-reveal').forEach((el: any) => {
+        gsap.fromTo(el, { opacity: 0, y: 25 }, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', scrollTrigger: { trigger: el, start: 'top 90%' } });
+      });
+    });
+  </script>
+</BaseLayout>

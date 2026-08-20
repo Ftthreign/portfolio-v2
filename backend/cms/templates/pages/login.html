@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Admin — Portfolio CMS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Geist', sans-serif; background: #FDFCF0; color: #2D2D2D; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .login-box { background: #F5F4E8; border: 1px solid rgba(45,45,45,0.12); padding: 2.5rem; border-radius: 8px; width: 100%; max-width: 400px; box-shadow: 0 10px 30px rgba(45,45,45,0.05); }
+        h1 { font-family: 'Playfair Display', serif; font-size: 1.8rem; margin-bottom: 0.5rem; text-align: center; }
+        p { text-align: center; font-size: 0.85rem; opacity: 0.7; margin-bottom: 2rem; }
+        label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: 0.3rem; }
+        input { width: 100%; padding: 0.75rem; border: 1px solid rgba(45,45,45,0.2); border-radius: 4px; background: #fff; margin-bottom: 1.25rem; font-size: 0.9rem; box-sizing: border-box; }
+        button { width: 100%; background: #2D2D2D; color: #FDFCF0; border: none; padding: 0.75rem; font-weight: 600; border-radius: 4px; cursor: pointer; transition: background 0.2s; }
+        button:hover { background: #E2725B; }
+        .error-msg { background: #ffdad6; color: #93000a; padding: 0.6rem; border-radius: 4px; font-size: 0.85rem; margin-bottom: 1rem; text-align: center; display: none; }
+    </style>
+</head>
+<body>
+    <div class="login-box">
+        <h1>CMS Admin<span style="color:#E2725B">.</span></h1>
+        <p>Masuk ke dashboard manajemen portfolio</p>
+
+        {{ if .Error }}
+        <div class="error-msg" style="display:block;">{{ .Error }}</div>
+        {{ end }}
+
+        <form action="/cms/login" method="POST">
+            <div>
+                <label>Email Admin</label>
+                <input type="email" name="email" required placeholder="admin@example.com">
+            </div>
+            <div>
+                <label>Password</label>
+                <input type="password" name="password" required placeholder="••••••••">
+            </div>
+            <button type="submit">Masuk Dashboard</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -34,6 +34,19 @@ export interface Project {
   featured: boolean;
 }
 
+export interface BlogPost {
+  id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  cover_image_url: string;
+  tags: string[];
+  published: boolean;
+  published_at?: string;
+  reading_time_minutes: number;
+}
+
 const getApiBase = (): string => {
   if (typeof window !== 'undefined') {
     return import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
@@ -48,7 +61,7 @@ export async function fetchProfile(): Promise<Profile> {
     return await res.json();
   } catch {
     return {
-      name: 'Fadhil',
+      name: 'Ftthreign',
       tagline: 'Fullstack Engineer & Systems Builder',
       bio: 'Crafting thoughtful digital experiences with Go, TypeScript, Astro, and PostgreSQL.',
       location: 'Indonesia',
@@ -73,5 +86,35 @@ export async function fetchProjects(): Promise<Project[]> {
     return await res.json();
   } catch {
     return [];
+  }
+}
+
+export async function fetchProjectBySlug(slug: string): Promise<Project | null> {
+  try {
+    const res = await fetch(`${getApiBase()}/api/v1/projects/${slug}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
+  }
+}
+
+export async function fetchBlogPosts(): Promise<BlogPost[]> {
+  try {
+    const res = await fetch(`${getApiBase()}/api/v1/blog`);
+    if (!res.ok) throw new Error('Failed to fetch blog posts');
+    return await res.json();
+  } catch {
+    return [];
+  }
+}
+
+export async function fetchBlogPostBySlug(slug: string): Promise<BlogPost | null> {
+  try {
+    const res = await fetch(`${getApiBase()}/api/v1/blog/${slug}`);
+    if (!res.ok) return null;
+    return await res.json();
+  } catch {
+    return null;
   }
 }

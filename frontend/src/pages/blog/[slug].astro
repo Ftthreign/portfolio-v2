@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { fetchBlogPostBySlug } from '../../services/api';
+
+const { slug } = Astro.params;
+const post = slug ? await fetchBlogPostBySlug(slug) : null;
+
+if (!post) {
+  return Astro.redirect('/404');
+}
+---
+
+<BaseLayout title={`${post.title} — Blog`} description={post.excerpt}>
+  <article class="max-w-container mx-auto px-margin-mobile md:px-gutter pt-12 pb-24">
+    <!-- Back Button -->
+    <a href="/blog" class="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-charcoal-variant hover:text-terracotta transition-colors mb-8">
+      &larr; Kembali ke Daftar Blog
+    </a>
+
+    <!-- Header -->
+    <header class="mb-10 max-w-3xl">
+      <div class="flex items-center gap-3 text-xs text-charcoal-variant mb-4">
+        <span class="font-semibold uppercase tracking-wider text-terracotta">{post.reading_time_minutes} min read</span>
+        {post.published_at && (
+          <>
+            <span>&bull;</span>
+            <span>{new Date(post.published_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
+          </>
+        )}
+      </div>
+      <h1 class="font-serif text-3xl md:text-5xl font-bold text-charcoal leading-tight mb-6">
+        {post.title}
+      </h1>
+      <div class="flex flex-wrap gap-2">
+        {post.tags?.map((tag) => (
+          <span class="text-xs font-mono bg-sage/10 text-sage-dark px-2.5 py-1 rounded">
+            #{tag}
+          </span>
+        ))}
+      </div>
+    </header>
+
+    <!-- Cover Image -->
+    {post.cover_image_url && (
+      <div class="aspect-video w-full rounded-lg overflow-hidden border border-charcoal/10 bg-cream-container mb-12">
+        <img src={post.cover_image_url} alt={post.title} class="w-full h-full object-cover" />
+      </div>
+    )}
+
+    <!-- Content -->
+    <div class="prose max-w-3xl text-charcoal-variant leading-relaxed text-base md:text-lg space-y-6" set:html={post.content || '<p>Konten tidak tersedia.</p>'} />
+  </article>
+</BaseLayout>
