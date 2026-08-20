@@ -28,3 +28,5 @@ backend/tmp/
 # Uploads / Cache
 uploads/
 tmp/
+*.md
+!README.md
