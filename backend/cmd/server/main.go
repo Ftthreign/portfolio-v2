@@ -37,6 +37,11 @@ func main() {
 	}
 	defer db.Close()
 
+	// Execute Auto Migrations (00001_init.sql)
+	if db != nil && db.Pool != nil {
+		runMigrations(db)
+	}
+
 	// Services
 	authService := service.NewAuthService(cfg.JWTSecret)
 	r2Service, err := service.NewR2StorageService(cfg.R2)
@@ -47,17 +52,18 @@ func main() {
 		log.Println("R2 Storage Service ready")
 	}
 
-	// Auto-seed admin user if empty
-	ctxSeed, cancelSeed := context.WithTimeout(context.Background(), 5*time.Second)
+	// Auto-seed admin user & initial portfolio content if empty
+	ctxSeed, cancelSeed := context.WithTimeout(context.Background(), 10*time.Second)
 	defer cancelSeed()
-	if db.Pool != nil {
+	if db != nil && db.Pool != nil {
 		adminEmail := "admin@example.com"
 		adminUser, _ := db.GetUserByEmail(ctxSeed, adminEmail)
 		if adminUser == nil {
 			hash, _ := authService.HashPassword("admin123")
 			_, _ = db.CreateUser(ctxSeed, adminEmail, hash)
-			log.Println("Created default admin user: admin@example.com / admin123")
+			log.Println("Seeded default admin user: admin@example.com / admin123")
 		}
+		seedInitialData(ctxSeed, db)
 	}
 
 	r := chi.NewRouter()
@@ -352,6 +358,57 @@ func renderCMSTemplate(w http.ResponseWriter, pageFile string, activeMenu string
 	data["Title"] = strings.Title(activeMenu)
 	data["Active"] = activeMenu
 	tmpl.ExecuteTemplate(w, "base.html", data)
+}
+
+func runMigrations(db *postgres.DB) {
+	migrationBytes, err := os.ReadFile("migrations/00001_init.sql")
+	if err != nil {
+		migrationBytes, err = os.ReadFile("backend/migrations/00001_init.sql")
+	}
+	if err != nil {
+		log.Printf("Warning: Failed to read migration file: %v", err)
+		return
+	}
+
+	ctx, cancel := context.WithTimeout(context.Background(), 15*time.Second)
+	defer cancel()
+
+	_, err = db.Pool.Exec(ctx, string(migrationBytes))
+	if err != nil {
+		log.Printf("Warning: Failed to execute database migrations: %v", err)
+		return
+	}
+	log.Println("Database migrations executed successfully!")
+}
+
+func seedInitialData(ctx context.Context, db *postgres.DB) {
+	// Seed Profile if empty
+	p, _ := db.GetProfile(ctx)
+	if p != nil && p.Name == "Ftthreign" {
+		_ = db.UpsertProfile(ctx, &domain.Profile{
+			Name:     "Ftthreign",
+			Tagline:  "Fullstack Engineer & Systems Builder",
+			Bio:      "Building high-performance web applications and backend systems with Go, TypeScript, Astro, and PostgreSQL.",
+			Email:    "theownerkill432@gmail.com",
+			Location: "Indonesia",
+		})
+	}
+
+	// Seed Sample Project if empty
+	projects, _ := db.GetProjects(ctx, false)
+	if len(projects) == 0 {
+		_ = db.CreateProject(ctx, &domain.Project{
+			Title:            "Portfolio V2 System",
+			Slug:             "portfolio-v2-system",
+			ShortDescription: "Fullstack portfolio website with Go backend, PostgreSQL, Astro TS SSR, and custom HTMX CMS.",
+			FullDescription:  "<p>Detailed overview of the portfolio architecture, including clean layered architecture, Cloudflare R2 storage, and automated GitHub Actions CI/CD deployment.</p>",
+			TechStack:        []string{"Go", "PostgreSQL", "Astro TS", "Bun", "TailwindCSS", "GSAP"},
+			RepoURL:          "https://github.com/Ftthreign/portfolio-v2",
+			LiveURL:          "https://my-ftthreign.my.id",
+			Published:        true,
+		})
+		log.Println("Seeded sample project: Portfolio V2 System")
+	}
 }
 
 func parseTemplateFiles(filenames ...string) (*template.Template, error) {
