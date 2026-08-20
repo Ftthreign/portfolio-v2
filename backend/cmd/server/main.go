@@ -355,15 +355,22 @@ func renderCMSTemplate(w http.ResponseWriter, pageFile string, activeMenu string
 }
 
 func parseTemplateFiles(filenames ...string) (*template.Template, error) {
-	tmpl, err := template.ParseFiles(filenames...)
-	if err == nil {
+	// Try original filenames first
+	if tmpl, err := template.ParseFiles(filenames...); err == nil {
 		return tmpl, nil
 	}
-	var prefixed []string
+
+	// Try prefixing with backend/
+	var backendFilenames []string
 	for _, f := range filenames {
-		prefixed = append(prefixed, "backend/"+f)
+		backendFilenames = append(backendFilenames, "backend/"+f)
 	}
-	return template.ParseFiles(prefixed...)
+	if tmpl, err := template.ParseFiles(backendFilenames...); err == nil {
+		return tmpl, nil
+	}
+
+	// Try relative from working directory or fallback
+	return nil, fmt.Errorf("unable to locate templates: %v", filenames)
 }
 
 func slugify(text string) string {
