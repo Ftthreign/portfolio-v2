@@ -1,0 +1,55 @@
+@import "@fontsource/playfair-display/400.css";
+@import "@fontsource/playfair-display/600.css";
+@import "@fontsource/playfair-display/700.css";
+@import "@fontsource/geist-sans/400.css";
+@import "@fontsource/geist-sans/500.css";
+@import "@fontsource/geist-sans/600.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --color-bg: #FDFCF0;
+    --color-text: #2D2D2D;
+    --color-accent-terracotta: #E2725B;
+    --color-accent-sage: #8A9A5B;
+    --color-border: rgba(45, 45, 45, 0.1);
+  }
+
+  html {
+    scroll-behavior: smooth;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  body {
+    background-color: #FDFCF0;
+    color: #2D2D2D;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-family: 'Playfair Display', Georgia, serif;
+    color: #2D2D2D;
+  }
+}
+
+/* Custom scrollbar matching warm theme */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: #FDFCF0;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(45, 45, 45, 0.2);
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: rgba(45, 45, 45, 0.4);
+}
