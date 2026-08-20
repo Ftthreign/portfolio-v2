@@ -157,7 +157,11 @@ func main() {
 	r.Route("/cms", func(r chi.Router) {
 		// Login GET & POST
 		r.Get("/login", func(w http.ResponseWriter, r *http.Request) {
-			tmpl := template.Must(template.ParseFiles("cms/templates/pages/login.html"))
+			tmpl, err := parseTemplateFiles("cms/templates/pages/login.html")
+			if err != nil {
+				http.Error(w, "Template error: "+err.Error(), http.StatusInternalServerError)
+				return
+			}
 			tmpl.Execute(w, nil)
 		})
 
@@ -168,7 +172,7 @@ func main() {
 
 			user, err := db.GetUserByEmail(r.Context(), email)
 			if err != nil || user == nil || !authService.CheckPasswordHash(password, user.PasswordHash) {
-				tmpl := template.Must(template.ParseFiles("cms/templates/pages/login.html"))
+				tmpl, _ := parseTemplateFiles("cms/templates/pages/login.html")
 				tmpl.Execute(w, map[string]interface{}{"Error": "Email atau password salah."})
 				return
 			}
@@ -340,7 +344,7 @@ func main() {
 }
 
 func renderCMSTemplate(w http.ResponseWriter, pageFile string, activeMenu string, data map[string]interface{}) {
-	tmpl, err := template.ParseFiles("cms/templates/layouts/base.html", "cms/templates/pages/"+pageFile)
+	tmpl, err := parseTemplateFiles("cms/templates/layouts/base.html", "cms/templates/pages/"+pageFile)
 	if err != nil {
 		http.Error(w, "Template error: "+err.Error(), http.StatusInternalServerError)
 		return
@@ -348,6 +352,18 @@ func renderCMSTemplate(w http.ResponseWriter, pageFile string, activeMenu string
 	data["Title"] = strings.Title(activeMenu)
 	data["Active"] = activeMenu
 	tmpl.ExecuteTemplate(w, "base.html", data)
+}
+
+func parseTemplateFiles(filenames ...string) (*template.Template, error) {
+	tmpl, err := template.ParseFiles(filenames...)
+	if err == nil {
+		return tmpl, nil
+	}
+	var prefixed []string
+	for _, f := range filenames {
+		prefixed = append(prefixed, "backend/"+f)
+	}
+	return template.ParseFiles(prefixed...)
 }
 
 func slugify(text string) string {

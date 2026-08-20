@@ -7,9 +7,12 @@ interface Props {
 }
 
 const {
-  title = 'Fadhil — Fullstack Engineer & Systems Builder',
+  title = 'Ftthreign — Fullstack Engineer & Systems Builder',
   description = 'Portfolio & Journal of a Fullstack Developer focusing on craft, clarity, Go, TypeScript, and clean systems architecture.',
 } = Astro.props;
+
+const apiBase = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
+const cmsLoginUrl = `${apiBase}/cms/login`;
 ---
 
 <!json>
@@ -44,7 +47,7 @@ const {
         </nav>
 
         <a
-          href="/cms/login"
+          href={cmsLoginUrl}
           class="text-xs uppercase tracking-wider font-semibold border border-charcoal/20 px-3 py-1.5 rounded hover:bg-charcoal hover:text-cream transition-all"
         >
           CMS Admin
