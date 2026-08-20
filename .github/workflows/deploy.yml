@@ -33,8 +33,8 @@ jobs:
             # Pull kode terbaru
             git pull origin master || git pull origin main
 
-            # Restart dan build container terbaru secara otomatis
-            docker compose -f docker-compose.prod.yml up -d --build
+            # Restart dan build container terbaru secara otomatis (serta bersihkan caddy container lama)
+            docker compose -f docker-compose.prod.yml up -d --build --remove-orphans
 
             # Bersihkan image lama yang tidak terpakai
             docker image prune -f
