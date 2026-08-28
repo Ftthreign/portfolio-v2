@@ -15,7 +15,7 @@ const {
 ---
 
 <!DOCTYPE html>
-<html lang="en" class="scroll-smooth">
+<html lang="en" class="scroll-smooth overflow-x-hidden w-full max-w-full">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -43,13 +43,13 @@ const {
       }
     </script>
   </head>
-  <body class="bg-surface dark:bg-[#0b1120] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans relative overflow-x-hidden transition-colors duration-400">
+  <body class="bg-surface dark:bg-[#0b1120] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans relative overflow-x-hidden w-full max-w-full transition-colors duration-400">
     <div class="custom-cursor hidden md:block"></div>
     <div class="custom-cursor-follower hidden md:block"></div>
 
     <Navbar />
 
-    <main class="flex-grow pt-24 md:pt-28">
+    <main class="flex-grow pt-24 md:pt-28 w-full max-w-full overflow-x-hidden">
       <slot />
     </main>
 
