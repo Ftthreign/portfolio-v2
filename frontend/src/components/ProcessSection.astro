@@ -40,9 +40,8 @@ const steps = [
 ---
 
 <style>
-  /* Forced High-Specificity Governor Bay 600 Active Blue Pill */
   .process-active-bg {
-    background-color: #2563eb !important; /* Governor Bay 600 Primary Blue */
+    background-color: #2563eb !important; 
     box-shadow: 0 4px 16px -2px rgba(37, 99, 235, 0.3) !important;
   }
 
@@ -59,7 +58,6 @@ const steps = [
 </style>
 
 <section class="process-section max-w-container mx-auto px-6 lg:px-12 py-16 sm:py-24 relative select-none">
-  <!-- Mobile & Tablet Sticky Progress Bar (< 1024px) -->
   <div class="lg:hidden sticky top-24 sm:top-28 z-30 -mx-6 px-6 py-3.5 bg-white/95 dark:bg-[#0b1120]/95 backdrop-blur-xl border-y border-slate-200/80 dark:border-slate-800/80 mb-8 overflow-x-auto no-scrollbar flex items-center gap-2.5 shadow-sm">
     {steps.map((item, idx) => (
       <a
@@ -75,16 +73,9 @@ const steps = [
     ))}
   </div>
 
-  <!-- 2-Column Sticky Layout (Desktop ≥ 1024px) -->
   <div class="flex flex-col lg:flex-row gap-12 lg:gap-16 items-start">
-    <!-- Left Column: Sticky Progress Navigation (Sticky top-32) -->
     <div class="lg:w-5/12 lg:sticky lg:top-32 space-y-8 shrink-0">
       <div class="space-y-3">
-        <span class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 border border-slate-200/80 dark:border-slate-700/80 text-xs font-bold uppercase tracking-widest text-governor-bay-600 dark:text-governor-bay-400 font-hero-sans">
-          <span class="w-2 h-2 rounded-full bg-governor-bay-500"></span>
-          <span>Process & Strategy</span>
-        </span>
-
         <h2 class="font-hero-serif italic text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white leading-tight">
           How I transform complex product ideas into intuitive reality<span class="text-governor-bay-500 not-italic">.</span>
         </h2>
@@ -94,9 +85,7 @@ const steps = [
         </p>
       </div>
 
-      <!-- Desktop Interactive Sticky Progress Tracker with Solid Governor Bay 600 Blue Pill -->
       <div class="hidden lg:flex flex-col gap-2 relative border-l-2 border-slate-200 dark:border-slate-800 pl-4 py-2">
-        <!-- GSAP Animated Sliding Active Background Pill (#2563eb Governor Bay 600) -->
         <div class="process-active-bg absolute left-4 top-0 w-[calc(100%-1rem)] rounded-full z-0 pointer-events-none opacity-0"></div>
 
         {steps.map((item, idx) => (
@@ -116,24 +105,18 @@ const steps = [
       </div>
     </div>
 
-    <!-- Right Column: Clean Minimalist Process Cards -->
     <div class="lg:w-7/12 w-full flex flex-col gap-12 lg:gap-16">
       {steps.map((item, idx) => (
         <div
           id={`process-step-${idx + 1}`}
           class="process-step-card scroll-mt-44 sm:scroll-mt-48 bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-3xl p-8 sm:p-10 border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-xl transition-all duration-300 space-y-6 relative overflow-hidden group"
         >
-          <!-- Top Meta Row -->
           <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800 pb-4 relative z-10">
-            <span class="text-xs font-bold text-white bg-governor-bay-600 px-4 py-1.5 rounded-full shadow-sm font-hero-sans">
-              {item.step}
-            </span>
             <span class="text-xs font-semibold uppercase tracking-wider text-governor-bay-600 dark:text-governor-bay-400 font-hero-sans">
               {item.category}
             </span>
           </div>
 
-          <!-- Title & Description -->
           <div class="space-y-3 relative z-10">
             <h3 class="font-hero-serif italic text-2xl sm:text-3xl lg:text-4xl font-bold text-slate-900 dark:text-white group-hover:text-governor-bay-600 dark:group-hover:text-governor-bay-400 transition-colors">
               {item.title}
@@ -143,7 +126,6 @@ const steps = [
             </p>
           </div>
 
-          <!-- Key Performance Metric Box (Clean Neutral Styling) -->
           <div class="relative z-10 bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-4 flex items-center justify-between gap-3 shadow-sm">
             <div class="flex items-center gap-2.5">
               <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>

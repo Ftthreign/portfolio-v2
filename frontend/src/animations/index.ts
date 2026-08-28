@@ -9,6 +9,7 @@ import { initProcessSticky } from './components/process-sticky';
 import { initFeaturedProjectsAnimations } from './components/projects';
 import { initBlogRowAnimations } from './components/blog';
 import { initSkillsSectionAnimations } from './components/skills';
+import { initContainerScrollAnimations } from './components/container-scroll';
 
 export {
   gsap,
@@ -23,6 +24,7 @@ export {
   initFeaturedProjectsAnimations,
   initBlogRowAnimations,
   initSkillsSectionAnimations,
+  initContainerScrollAnimations,
 };
 
 /**
@@ -42,6 +44,7 @@ export function initAppAnimations(): (() => void) | undefined {
     initFeaturedProjectsAnimations(),
     initBlogRowAnimations(),
     initSkillsSectionAnimations(),
+    initContainerScrollAnimations(),
   ];
 
   initScrollReveals();

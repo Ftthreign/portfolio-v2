@@ -1,7 +1,4 @@
 ---
-// SkillsSection.astro — Interactive Solar System Skills Showcase
-// Clean, 100% Responsive & Adaptive Orbit Visualizer with Mobile Bottom Sheet Card
-
 interface Skill {
   name: string;
   level: number;
@@ -13,7 +10,6 @@ interface Skill {
 interface SkillCategory {
   id: string;
   label: string;
-  icon: string;
   skills: Skill[];
 }
 
@@ -21,7 +17,6 @@ const skillCategories: SkillCategory[] = [
   {
     id: 'frontend',
     label: 'Frontend & UI Engineering',
-    icon: '⬡',
     skills: [
       { name: 'TypeScript', level: 95, tag: 'Expert', iconUrl: 'https://cdn.simpleicons.org/typescript/3178C6', desc: 'Primary language for type-safe frontend & backend architecture' },
       { name: 'React / Next.js', level: 92, tag: 'Expert', iconUrl: 'https://cdn.simpleicons.org/react/61DAFB', desc: 'SSR & client web app application architecture' },
@@ -33,7 +28,6 @@ const skillCategories: SkillCategory[] = [
   {
     id: 'backend',
     label: 'Backend & Architecture',
-    icon: '⬢',
     skills: [
       { name: 'Go (Golang)', level: 85, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/go/00ADD8', desc: 'High-concurrency microservices & REST APIs' },
       { name: 'PostgreSQL', level: 88, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/postgresql/4169E1', desc: 'Relational database schema & index performance' },
@@ -45,7 +39,6 @@ const skillCategories: SkillCategory[] = [
   {
     id: 'design',
     label: 'Design Systems & Motion',
-    icon: '◈',
     skills: [
       { name: 'Figma Tokens', level: 96, tag: 'Expert', iconUrl: 'https://cdn.simpleicons.org/figma/F24E1E', desc: 'Multi-brand design system & variable architecture' },
       { name: 'Design Tokens', level: 94, tag: 'Expert', iconUrl: 'https://cdn.simpleicons.org/json/000000', desc: 'JSON dynamic theme tokens & semantic colors' },
@@ -56,7 +49,6 @@ const skillCategories: SkillCategory[] = [
   {
     id: 'product',
     label: 'Product Strategy & Infrastructure',
-    icon: '◇',
     skills: [
       { name: 'UX Research', level: 85, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/figma/F24E1E', desc: 'Qualitative user journeys & interaction flows' },
       { name: 'System Architecture', level: 82, tag: 'Proficient', iconUrl: 'https://cdn.simpleicons.org/json/000000', desc: 'Scalable cloud component & API specs' },
@@ -75,38 +67,53 @@ const totalSkillsCount = skillCategories.reduce((acc, cat) => acc + cat.skills.l
   role="region"
 >
 
-  <!-- ═══════════════════════════════════════════════════ -->
-  <!-- SECTION HEADER -->
-  <!-- ═══════════════════════════════════════════════════ -->
-  <header class="relative z-10 mb-6 sm:mb-10 lg:max-w-[46%]">
-    <h2 class="font-hero-serif italic text-2xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-2">
-      Skills & Proficiency<span class="text-governor-bay-500 not-italic">.</span>
-    </h2>
-  </header>
+  <header class="relative z-10 mb-6 sm:mb-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+    <div>
+      <h2 class="font-hero-serif italic text-2xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-2">
+        Skills & Proficiency<span class="text-governor-bay-500 not-italic">.</span>
+      </h2>
+      <p class="text-xs sm:text-sm text-slate-500 dark:text-slate-400 font-hero-sans max-w-md">
+        Interactive solar system orbit visualizer or traditional editorial specification grid.
+      </p>
+    </div>
 
-  <!-- ═══════════════════════════════════════════════════════════════ -->
-  <!-- SOLAR SYSTEM ORBIT VISUALIZER -->
-  <!-- ═══════════════════════════════════════════════════════════════ -->
-  <div id="variant-orbital" class="skills-variant relative">
-
-    <!-- Category Filter Tabs -->
-    <nav class="flex items-center justify-start lg:justify-center gap-2 mb-6 sm:mb-8 overflow-x-auto no-scrollbar pb-1.5 -mx-6 px-6 lg:mx-0 lg:px-0" aria-label="Skill Category Filters">
+    <!-- View Mode Switcher Pill Toggle -->
+    <div class="inline-flex items-center gap-1 p-1.5 rounded-full bg-white/70 dark:bg-slate-900/80 border border-slate-200/80 dark:border-slate-800/80 shadow-lg shadow-slate-900/5 backdrop-blur-xl self-start sm:self-auto shrink-0">
       <button
-        data-solar-filter="all"
-        class="solar-filter-btn active-solar-filter whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold font-hero-sans transition-all duration-300 bg-governor-bay-600 text-white shadow-md cursor-pointer shrink-0"
+        data-skills-view="orbital"
+        class="skills-view-btn active-skills-view whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold font-hero-sans transition-all duration-300 bg-governor-bay-600 text-white shadow-md cursor-pointer flex items-center gap-2"
         type="button"
       >
-        🪐 All Solar System Orbits
+        <span>Solar Orbit</span>
       </button>
-      {skillCategories.map((cat) => (
+      <button
+        data-skills-view="grid"
+        class="skills-view-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold font-hero-sans transition-all duration-300 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200/50 dark:hover:bg-slate-800/50 cursor-pointer flex items-center gap-2"
+        type="button"
+      >
+        <span>Normal Grid</span>
+      </button>
+    </div>
+  </header>
+
+  <div id="variant-orbital" class="skills-variant relative">
+    <nav class="flex items-center justify-start lg:justify-center mb-6 sm:mb-8 overflow-x-auto no-scrollbar pb-1.5 -mx-4 px-4 lg:mx-0 lg:px-0" aria-label="Skill Category Filters">
+      <div class="inline-flex items-center gap-1.5 p-1.5 rounded-full bg-white/60 dark:bg-slate-900/70 backdrop-blur-xl border border-slate-200/80 dark:border-slate-800/80 shadow-md max-w-full overflow-x-auto no-scrollbar">
         <button
-          data-solar-filter={cat.id}
-          class="solar-filter-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold font-hero-sans transition-all duration-300 bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:text-governor-bay-600 dark:hover:text-governor-bay-400 cursor-pointer shrink-0"
+          data-solar-filter="all"
+          class="solar-filter-btn active-solar-filter whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold font-hero-sans transition-all duration-300 bg-governor-bay-600 text-white shadow-md cursor-pointer shrink-0"
           type="button"
-        >
-          {cat.icon} {cat.label}
-        </button>
-      ))}
+        >All Categories</button>
+        {skillCategories.map((cat) => (
+          <button
+            data-solar-filter={cat.id}
+            class="solar-filter-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold font-hero-sans transition-all duration-300 text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-slate-100 hover:bg-slate-200/60 dark:hover:bg-slate-800/60 cursor-pointer shrink-0 flex items-center gap-1.5"
+            type="button"
+          >
+            <span>{cat.label}</span>
+          </button>
+        ))}
+      </div>
     </nav>
 
     <!-- Canvas Container (Responsive Height: 460px on Mobile, 580px Tablet, 800px Desktop) -->
@@ -137,16 +144,7 @@ const totalSkillsCount = skillCategories.reduce((acc, cat) => acc + cat.skills.l
             <span id="solar-detail-tag" class="text-[11px] sm:text-xs font-hero-sans font-bold px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-governor-bay-600 text-white shadow-sm shrink-0">Expert</span>
           </div>
 
-          <!-- Proficiency Level Meter -->
-          <div class="space-y-1.5 sm:space-y-2">
-            <div class="flex items-center justify-between text-xs sm:text-sm font-hero-sans">
-              <span class="text-slate-500 dark:text-slate-400 font-medium">Proficiency Gauge</span>
-              <span id="solar-detail-level" class="font-bold text-governor-bay-600 dark:text-governor-bay-400 text-sm sm:text-lg">95%</span>
-            </div>
-            <div class="h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
-              <div id="solar-detail-bar" class="h-full bg-governor-bay-600 rounded-full transition-all duration-500" style="width: 95%;"></div>
-            </div>
-          </div>
+
 
           <!-- Description -->
           <p id="solar-detail-desc" class="text-slate-600 dark:text-slate-300 text-xs sm:text-base leading-relaxed font-hero-sans line-clamp-2 sm:line-clamp-none">
@@ -247,6 +245,52 @@ const totalSkillsCount = skillCategories.reduce((acc, cat) => acc + cat.skills.l
         })}
       </div>
     </div><!-- end canvas -->
+  </div>
+
+  <div id="variant-grid" class="skills-variant hidden opacity-0 relative z-10 transition-all duration-300">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 lg:gap-8">
+      {skillCategories.map((cat) => (
+        <article data-grid-category={cat.id} class="bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-8 shadow-xl flex flex-col justify-between hover:border-governor-bay-500/40 transition-all duration-300 group">
+          <div>
+            <div class="flex items-center justify-between pb-4 mb-6 border-b border-slate-100 dark:border-slate-800">
+              <div class="flex items-center gap-3">
+                <h3 class="font-hero-sans font-bold text-base sm:text-lg text-slate-900 dark:text-white group-hover:text-governor-bay-600 dark:group-hover:text-governor-bay-400 transition-colors">
+                  {cat.label}
+                </h3>
+              </div>
+              <span class="text-xs font-mono font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-400 border border-slate-200/60 dark:border-slate-700/60 shrink-0">
+                {cat.skills.length} Stack
+              </span>
+            </div>
+
+            <div class="space-y-5">
+              {cat.skills.map((skill) => (
+                <div class="space-y-2">
+                  <div class="flex items-center justify-between gap-3">
+                    <div class="flex items-center gap-3">
+                      <div class="w-8.5 h-8.5 rounded-xl bg-slate-100 dark:bg-slate-800 p-1.5 border border-slate-200/60 dark:border-slate-700/60 flex items-center justify-center shrink-0">
+                        <img src={skill.iconUrl} alt={skill.name} class="w-5 h-5 object-contain" />
+                      </div>
+                      <div>
+                        <span class="font-hero-sans font-bold text-sm text-slate-900 dark:text-slate-100 block leading-tight">
+                          {skill.name}
+                        </span>
+                        <span class="text-[11px] text-slate-500 dark:text-slate-400 font-hero-sans block mt-0.5 leading-snug">
+                          {skill.desc}
+                        </span>
+                      </div>
+                    </div>
+                    <span class="text-[11px] font-hero-sans font-bold px-2.5 py-0.5 rounded-full bg-governor-bay-50 dark:bg-governor-bay-950/60 text-governor-bay-600 dark:text-governor-bay-300 border border-governor-bay-200/60 dark:border-governor-bay-800/60 shrink-0">
+                      {skill.tag}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </article>
+      ))}
+    </div>
   </div>
 </section>
 

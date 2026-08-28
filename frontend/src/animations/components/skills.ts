@@ -2,6 +2,9 @@ import { getGSAP, isClient } from "../utils/gsap-setup";
 import { EASE_PRESETS } from "../config/constants";
 
 interface SolarDOM {
+  viewBtns: NodeListOf<HTMLElement>;
+  variantOrbital: HTMLElement | null;
+  variantGrid: HTMLElement | null;
   filterBtns: NodeListOf<HTMLElement>;
   planets: NodeListOf<HTMLElement>;
   rings: NodeListOf<HTMLElement>;
@@ -33,6 +36,9 @@ interface SolarState {
 
 function getSolarDOM(): SolarDOM {
   return {
+    viewBtns: document.querySelectorAll<HTMLElement>(".skills-view-btn"),
+    variantOrbital: document.getElementById("variant-orbital"),
+    variantGrid: document.getElementById("variant-grid"),
     filterBtns: document.querySelectorAll<HTMLElement>(".solar-filter-btn"),
     planets: document.querySelectorAll<HTMLElement>(".solar-planet-node"),
     rings: document.querySelectorAll<HTMLElement>(".solar-orbit-ring"),
@@ -43,8 +49,12 @@ function getSolarDOM(): SolarDOM {
     sunTitle: document.getElementById("solar-sun-title"),
     sunCount: document.getElementById("solar-sun-count"),
     sunCore: document.getElementById("solar-sun-core"),
-    sunLogo: document.getElementById("solar-sun-logo") as HTMLImageElement | null,
-    detailIcon: document.getElementById("solar-detail-icon") as HTMLImageElement | null,
+    sunLogo: document.getElementById(
+      "solar-sun-logo",
+    ) as HTMLImageElement | null,
+    detailIcon: document.getElementById(
+      "solar-detail-icon",
+    ) as HTMLImageElement | null,
     detailName: document.getElementById("solar-detail-name"),
     detailTag: document.getElementById("solar-detail-tag"),
     detailLevel: document.getElementById("solar-detail-level"),
@@ -98,18 +108,22 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
       p.style.opacity = "1";
     });
 
-    // Reset Central Sun Core
     if (dom.sunLogo) dom.sunLogo.classList.add("hidden");
     if (dom.sunIcon) dom.sunIcon.classList.remove("hidden");
     if (dom.sunTitle) dom.sunTitle.textContent = "Fullstack Core";
-    if (dom.sunCount) dom.sunCount.textContent = `${dom.planets.length} Planets`;
+    if (dom.sunCount)
+      dom.sunCount.textContent = `${dom.planets.length} Planets`;
 
-    // Slide orbit stage back to center (x:0, y:0)
     if (dom.stageCol) {
-      gsap.to(dom.stageCol, { x: 0, y: 0, duration: 0.6, ease: EASE_PRESETS.smoothOut, force3D: true });
+      gsap.to(dom.stageCol, {
+        x: 0,
+        y: 0,
+        duration: 0.6,
+        ease: EASE_PRESETS.smoothOut,
+        force3D: true,
+      });
     }
 
-    // Slide detail card out (bottom on mobile, right on desktop)
     if (dom.sideDetailWrap) {
       const isDesktop = window.innerWidth >= 1024;
       gsap.to(dom.sideDetailWrap, {
@@ -121,7 +135,8 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
         ease: EASE_PRESETS.powerOut,
         onComplete: () => {
           dom.sideDetailWrap?.classList.add("hidden");
-          if (dom.sideDetailWrap) dom.sideDetailWrap.style.pointerEvents = "none";
+          if (dom.sideDetailWrap)
+            dom.sideDetailWrap.style.pointerEvents = "none";
         },
       });
     }
@@ -139,12 +154,12 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
     state.activePlanet = planet;
 
     const name = planet.dataset.name || "Skill";
-    const iconUrl = planet.dataset.icon || "https://cdn.simpleicons.org/typescript/3178C6";
+    const iconUrl =
+      planet.dataset.icon || "https://cdn.simpleicons.org/typescript/3178C6";
     const desc = planet.dataset.desc || "";
     const level = planet.dataset.level || "90";
     const tag = planet.dataset.tag || "Expert";
 
-    // 1. Update Sun Core
     if (dom.sunIcon) dom.sunIcon.classList.add("hidden");
     if (dom.sunLogo) {
       dom.sunLogo.src = iconUrl;
@@ -153,7 +168,6 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
     if (dom.sunTitle) dom.sunTitle.textContent = name;
     if (dom.sunCount) dom.sunCount.textContent = `${level}% · ${tag}`;
 
-    // 2. Rotate orbit rotator to place clicked planet at 0° right apex facing card
     const planetAngle = parseFloat(planet.dataset.angle || "0");
     const parentRotator = planet.closest<HTMLElement>(".orbit-rotator");
     if (parentRotator) {
@@ -166,13 +180,11 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
       });
     }
 
-    // 3. Shift stage on first click (Left shift on Desktop, Upward shift on Mobile)
     if (!state.isShifted) {
       state.isShifted = true;
       const isDesktop = window.innerWidth >= 1024;
       if (dom.stageCol && isDesktop) {
         const rect = dom.stageCol.getBoundingClientRect();
-        // Place orbit center so the left edge of the 820px ring sits gracefully near left screen border
         const desiredCenterX = Math.max(380, window.innerWidth * 0.22);
         const currentCenterX = rect.left + rect.width / 2;
         const deltaX = desiredCenterX - currentCenterX;
@@ -195,7 +207,6 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
       }
     }
 
-    // 4. Reveal detail card (Slide in from right on Desktop, Bottom Sheet on Mobile)
     if (dom.sideDetailWrap) {
       dom.sideDetailWrap.classList.remove("hidden");
       dom.sideDetailWrap.style.pointerEvents = "auto";
@@ -213,7 +224,7 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
             duration: 0.55,
             ease: EASE_PRESETS.smoothOut,
             overwrite: "auto",
-          }
+          },
         );
       } else {
         gsap.fromTo(
@@ -227,12 +238,11 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
             duration: 0.45,
             ease: EASE_PRESETS.smoothOut,
             overwrite: "auto",
-          }
+          },
         );
       }
     }
 
-    // 5. Highlight active planet & dim remaining planets
     dom.planets.forEach((p) => {
       if (p === planet) {
         p.classList.add("active-planet");
@@ -243,43 +253,202 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
       }
     });
 
-    // 6. Update detail card DOM text & gauges
     if (dom.detailName) dom.detailName.textContent = name;
     if (dom.detailIcon) dom.detailIcon.src = iconUrl;
     if (dom.detailTag) dom.detailTag.textContent = tag;
     if (dom.detailDesc) dom.detailDesc.textContent = desc;
-    if (dom.detailLevel) dom.detailLevel.textContent = `${level}%`;
-    if (dom.detailBar) dom.detailBar.style.width = `${level}%`;
   };
 
-  // Filter Tabs
+  dom.viewBtns.forEach((btn) => {
+    const onViewClick = () => {
+      const targetView = btn.dataset.skillsView || "orbital";
+
+      dom.viewBtns.forEach((b) => {
+        b.classList.remove(
+          "bg-governor-bay-600",
+          "text-white",
+          "shadow-md",
+          "active-skills-view",
+        );
+        b.classList.add(
+          "text-slate-600",
+          "dark:text-slate-400",
+          "hover:text-slate-900",
+          "dark:hover:text-white",
+          "hover:bg-slate-200/50",
+          "dark:hover:bg-slate-800/50",
+        );
+        const dot = b.querySelector(".skills-view-dot");
+        if (dot) dot.classList.add("opacity-0");
+      });
+      btn.classList.add(
+        "bg-governor-bay-600",
+        "text-white",
+        "shadow-md",
+        "active-skills-view",
+      );
+      btn.classList.remove(
+        "text-slate-600",
+        "dark:text-slate-400",
+        "hover:text-slate-900",
+        "dark:hover:text-white",
+        "hover:bg-slate-200/50",
+        "dark:hover:bg-slate-800/50",
+      );
+      const activeDot = btn.querySelector(".skills-view-dot");
+      if (activeDot) activeDot.classList.remove("opacity-0");
+
+      if (targetView === "grid") {
+        pauseOrbit();
+        if (dom.variantOrbital) {
+          gsap.to(dom.variantOrbital, {
+            opacity: 0,
+            duration: 0.3,
+            ease: EASE_PRESETS.powerOut,
+            onComplete: () => {
+              dom.variantOrbital?.classList.add("hidden");
+              if (dom.variantGrid) {
+                dom.variantGrid.classList.remove("hidden");
+                gsap.fromTo(
+                  dom.variantGrid,
+                  { opacity: 0, y: 20 },
+                  {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.4,
+                    ease: EASE_PRESETS.smoothOut,
+                  },
+                );
+              }
+            },
+          });
+        }
+      } else {
+        if (dom.variantGrid) {
+          gsap.to(dom.variantGrid, {
+            opacity: 0,
+            duration: 0.3,
+            ease: EASE_PRESETS.powerOut,
+            onComplete: () => {
+              dom.variantGrid?.classList.add("hidden");
+              if (dom.variantOrbital) {
+                dom.variantOrbital.classList.remove("hidden");
+                gsap.fromTo(
+                  dom.variantOrbital,
+                  { opacity: 0, y: 20 },
+                  {
+                    opacity: 1,
+                    y: 0,
+                    duration: 0.4,
+                    ease: EASE_PRESETS.smoothOut,
+                  },
+                );
+                resumeOrbit();
+              }
+            },
+          });
+        }
+      }
+    };
+
+    btn.addEventListener("click", onViewClick);
+    cleanups.push(() => btn.removeEventListener("click", onViewClick));
+  });
+
   dom.filterBtns.forEach((btn) => {
     const onClick = () => {
       const filter = btn.dataset.solarFilter || "all";
 
       dom.filterBtns.forEach((b) => {
-        b.classList.remove("bg-governor-bay-600", "text-white", "shadow-sm", "active-solar-filter");
-        b.classList.add("bg-slate-100", "dark:bg-slate-900", "text-slate-600", "dark:text-slate-400");
+        b.classList.remove(
+          "bg-governor-bay-600",
+          "text-white",
+          "shadow-md",
+          "active-solar-filter",
+        );
+        b.classList.add(
+          "text-slate-600",
+          "dark:text-slate-400",
+          "hover:text-slate-900",
+          "dark:hover:text-slate-100",
+          "hover:bg-slate-200/60",
+          "dark:hover:bg-slate-800/60",
+        );
       });
-      btn.classList.add("bg-governor-bay-600", "text-white", "shadow-sm", "active-solar-filter");
-      btn.classList.remove("bg-slate-100", "dark:bg-slate-900", "text-slate-600", "dark:text-slate-400");
+      btn.classList.add(
+        "bg-governor-bay-600",
+        "text-white",
+        "shadow-md",
+        "active-solar-filter",
+      );
+      btn.classList.remove(
+        "text-slate-600",
+        "dark:text-slate-400",
+        "hover:text-slate-900",
+        "dark:hover:text-slate-100",
+        "hover:bg-slate-200/60",
+        "dark:hover:bg-slate-800/60",
+      );
 
       if (dom.sunTitle) {
-        dom.sunTitle.textContent = filter === "all" ? "Fullstack Core" : (btn.textContent?.trim() || "Category");
-        if (dom.sunIcon) dom.sunIcon.textContent = filter === "all" ? "☀️" : "🪐";
+        dom.sunTitle.textContent =
+          filter === "all"
+            ? "Fullstack Core"
+            : btn.textContent?.trim() || "Category";
       }
 
       let visibleCount = 0;
       dom.planets.forEach((planet) => {
         const cat = planet.dataset.category;
         const visible = filter === "all" || filter === cat;
-        planet.style.opacity = visible ? "1" : "0.15";
+        gsap.to(planet, {
+          opacity: visible ? 1 : 0.12,
+          scale: visible ? 1 : 0.75,
+          duration: 0.45,
+          ease: EASE_PRESETS.smoothOut,
+          overwrite: "auto",
+        });
         planet.style.pointerEvents = visible ? "auto" : "none";
         if (visible) visibleCount++;
       });
 
       dom.rings.forEach((ring) => {
-        ring.style.opacity = filter === "all" || filter === ring.dataset.ringCategory ? "1" : "0.3";
+        const visible =
+          filter === "all" || filter === ring.dataset.ringCategory;
+        gsap.to(ring, {
+          opacity: visible ? 1 : 0.2,
+          scale: visible ? 1 : 0.96,
+          duration: 0.5,
+          ease: EASE_PRESETS.smoothOut,
+          overwrite: "auto",
+        });
+      });
+
+      const gridCards = document.querySelectorAll<HTMLElement>(
+        "[data-grid-category]",
+      );
+      gridCards.forEach((card) => {
+        const cat = card.dataset.gridCategory;
+        const visible = filter === "all" || filter === cat;
+        if (visible) {
+          gsap.to(card, {
+            opacity: 1,
+            scale: 1,
+            y: 0,
+            duration: 0.45,
+            ease: EASE_PRESETS.smoothOut,
+            overwrite: "auto",
+          });
+        } else {
+          gsap.to(card, {
+            opacity: 0.25,
+            scale: 0.96,
+            y: 8,
+            duration: 0.35,
+            ease: EASE_PRESETS.powerOut,
+            overwrite: "auto",
+          });
+        }
       });
 
       if (dom.sunCount) dom.sunCount.textContent = `${visibleCount} Planets`;
@@ -289,7 +458,6 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
     cleanups.push(() => btn.removeEventListener("click", onClick));
   });
 
-  // Planet Click (With Toggle to Close if active)
   dom.planets.forEach((planet) => {
     const onClick = (e: MouseEvent) => {
       e.stopPropagation();
@@ -303,7 +471,6 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
     cleanups.push(() => planet.removeEventListener("click", onClick));
   });
 
-  // Resume Button
   if (dom.resumeBtn) {
     const onResume = (e: MouseEvent) => {
       e.stopPropagation();
@@ -320,7 +487,6 @@ export function initSkillsSectionAnimations(): (() => void) | undefined {
     cleanups.push(() => dom.sunCore?.removeEventListener("click", onSunClick));
   }
 
-  // 3D Parallax Tilt Effect on Mouse Movement
   if (dom.orbitStage) {
     const stage = dom.orbitStage;
     const onMouseMove = (e: MouseEvent) => {

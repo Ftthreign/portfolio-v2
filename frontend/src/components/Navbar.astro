@@ -18,36 +18,29 @@ const socialLinks = [
 ];
 ---
 
-<!-- Fixed Header Bar -->
-<header class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-container transition-all duration-300">
-  <nav class="glass-nav rounded-full px-6 py-3 shadow-glass flex items-center justify-between border border-slate-200/80 dark:border-slate-800/80 dark:bg-slate-900/80">
-    <!-- Brand Logo -->
+<header id="site-header" class="fixed top-0 left-0 right-0 z-[100] w-full flex justify-center transition-all duration-500 pointer-events-none">
+  <nav id="main-nav" class="nav-container pointer-events-auto transition-all duration-500 ease-out flex items-center justify-between w-full max-w-container px-6 sm:px-12 py-4 sm:py-5 border-b border-transparent bg-transparent">
     <a href="/" class="flex items-center gap-2.5 group magnetic z-[100]">
-      <span class="font-hero-serif italic text-lg font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-governor-bay-600 transition-colors">
+      <span class="font-hero-serif italic text-lg sm:text-xl font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-governor-bay-600 transition-colors">
         Ftthreign <span class="text-governor-bay-500 not-italic">.</span>
       </span>
     </a>
 
-    <!-- Right Controls: Theme Toggle & Hamburger Menu Button -->
     <div class="flex items-center gap-3 z-[100]">
-      <!-- Dark/Light Theme Toggle Button -->
       <button
         type="button"
-        class="theme-toggle-btn magnetic p-2.5 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-800 dark:text-amber-300 border border-slate-200 dark:border-slate-700 transition-all duration-300 cursor-pointer shadow-sm"
+        class="theme-toggle-btn magnetic p-2.5 rounded-full bg-slate-100/80 hover:bg-slate-200 dark:bg-slate-800/80 dark:hover:bg-slate-700 text-slate-800 dark:text-amber-300 border border-slate-200/60 dark:border-slate-700/60 transition-all duration-300 cursor-pointer shadow-sm"
         aria-label="Toggle Theme"
         title="Toggle Dark / Light Mode"
       >
-        <!-- Sun Icon (visible in Dark Mode) -->
         <svg class="w-4 h-4 hidden dark:block" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3v1m0 16v1m9-9h-1M4 12H3m15.364 6.364l-.707-.707M6.343 6.343l-.707-.707m12.728 0l-.707.707M6.343 17.657l-.707.707M16 12a4 4 0 11-8 0 4 4 0 018 0z"></path>
         </svg>
-        <!-- Moon Icon (visible in Light Mode) -->
         <svg class="w-4 h-4 block dark:hidden text-slate-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"></path>
         </svg>
       </button>
 
-      <!-- Hamburger Toggle Button -->
       <button
         type="button"
         class="nav-menu-btn magnetic flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-slate-900 dark:bg-white hover:bg-governor-bay-600 dark:hover:bg-governor-bay-500 text-white dark:text-slate-900 font-medium text-xs sm:text-sm shadow-md hover:shadow-hover transition-all duration-300 cursor-pointer"

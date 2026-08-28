@@ -16,6 +16,71 @@ export function initFullScreenNavbar(): (() => void) | undefined {
 
   if (!menuBtn || !menuOverlay) return;
 
+  const mainNav = document.getElementById("main-nav") as HTMLElement;
+
+  const updateNavScrolledState = () => {
+    if (!mainNav) return;
+    const isScrolled = window.scrollY > 40;
+
+    if (isScrolled) {
+      mainNav.classList.remove(
+        "w-full",
+        "max-w-container",
+        "px-6",
+        "sm:px-12",
+        "py-4",
+        "sm:py-5",
+        "border-transparent",
+        "bg-transparent"
+      );
+      mainNav.classList.add(
+        "w-[94%]",
+        "sm:w-[88%]",
+        "max-w-3xl",
+        "px-5",
+        "sm:px-6",
+        "py-2.5",
+        "rounded-full",
+        "border",
+        "border-slate-200/80",
+        "dark:border-slate-800/80",
+        "bg-white/80",
+        "dark:bg-slate-900/80",
+        "backdrop-blur-xl",
+        "shadow-xl",
+        "translate-y-3.5"
+      );
+    } else {
+      mainNav.classList.remove(
+        "w-[94%]",
+        "sm:w-[88%]",
+        "max-w-3xl",
+        "px-5",
+        "sm:px-6",
+        "py-2.5",
+        "rounded-full",
+        "border",
+        "border-slate-200/80",
+        "dark:border-slate-800/80",
+        "bg-white/80",
+        "dark:bg-slate-900/80",
+        "backdrop-blur-xl",
+        "shadow-xl",
+        "translate-y-3.5"
+      );
+      mainNav.classList.add(
+        "w-full",
+        "max-w-container",
+        "px-6",
+        "sm:px-12",
+        "py-4",
+        "sm:py-5",
+        "border-transparent",
+        "bg-transparent"
+      );
+    }
+  };
+
   let isOpen = false;
 
   const getButtonCenter = () => {
@@ -120,6 +185,10 @@ export function initFullScreenNavbar(): (() => void) | undefined {
 
   document.addEventListener('keydown', onKeyDown);
   cleanups.push(() => document.removeEventListener('keydown', onKeyDown));
+
+  updateNavScrolledState();
+  window.addEventListener('scroll', updateNavScrolledState, { passive: true });
+  cleanups.push(() => window.removeEventListener('scroll', updateNavScrolledState));
 
   return () => {
     cleanups.forEach((fn) => fn());

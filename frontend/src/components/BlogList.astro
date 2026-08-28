@@ -1,0 +1,44 @@
+---
+import type { BlogPost } from '../services/api';
+import BlogCard from './BlogCard.astro';
+
+interface Props {
+  posts: BlogPost[];
+  showTags?: boolean;
+}
+
+const { posts, showTags = true } = Astro.props;
+---
+
+<div class="blog-list-container relative">
+  {posts.length === 0 ? (
+    <div class="p-12 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-center font-hero-sans">
+      <p class="text-slate-900 dark:text-white font-bold text-lg mb-2">No Articles Published</p>
+      <p class="text-slate-500 text-sm">Add blog posts via the CMS admin portal.</p>
+    </div>
+  ) : (
+    <div class="space-y-1">
+      {posts.map((post, idx) => (
+        <BlogCard post={post} index={idx} showTags={showTags} />
+      ))}
+    </div>
+  )}
+
+  <!-- GSAP Desktop Floating Cover Image Preview Modal (Follows Cursor on Row Hover) -->
+  <div class="blog-floating-preview fixed top-0 left-0 w-72 h-44 rounded-2xl overflow-hidden shadow-2xl pointer-events-none z-50 opacity-0 scale-85 border border-white/50 dark:border-slate-800 hidden lg:block bg-slate-900">
+    <img src="" alt="Article Preview" class="blog-floating-img w-full h-full object-cover" />
+  </div>
+</div>
+
+<!-- Client Script to Initialize Blog Row Animation Controller -->
+<script>
+  import { initBlogRowAnimations } from '../utils/gsap';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initBlogRowAnimations();
+  });
+
+  document.addEventListener('astro:page-load', () => {
+    initBlogRowAnimations();
+  });
+</script>

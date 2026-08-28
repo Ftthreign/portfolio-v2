@@ -18,7 +18,6 @@ if (!project) {
   return Astro.redirect('/projects');
 }
 
-// Compute Prev and Next Projects for Navigation Controller
 const currentIndex = projects.findIndex((p) => p.slug === project.slug);
 const prevProject = currentIndex > 0 ? projects[currentIndex - 1] : projects[projects.length - 1];
 const nextProject = currentIndex < projects.length - 1 ? projects[currentIndex + 1] : projects[0];
@@ -26,33 +25,40 @@ const nextProject = currentIndex < projects.length - 1 ? projects[currentIndex +
 
 <BaseLayout title={`${project.title} — Case Study`} description={project.short_description}>
   <article class="max-w-container mx-auto px-6 lg:px-12 pt-12 pb-24 select-none">
-    <!-- Reusable Breadcrumb Navigation -->
     <Breadcrumb items={[{ label: 'Projects', href: '/projects' }, { label: project.title }]} />
 
-    <!-- Case Study Header -->
-    <div class="max-w-4xl mb-12 space-y-4 gsap-reveal">
-      <div class="flex flex-wrap items-center gap-3">
-        {project.category && (
-          <span class="px-3.5 py-1.5 rounded-full bg-governor-bay-50 dark:bg-governor-bay-950/80 text-governor-bay-600 dark:text-governor-bay-300 text-xs font-bold border border-governor-bay-200/80 dark:border-governor-bay-800/80 font-hero-sans shadow-sm">
-            {project.category}
-          </span>
-        )}
-        <span class="text-xs font-mono text-slate-400 dark:text-slate-500 font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800">
-          Published {project.year || '2025'}
-        </span>
+    <div class="container-scroll-wrapper relative py-12 sm:py-24 min-h-[85vh] sm:min-h-[110vh] flex flex-col items-center justify-center">
+      <div class="container-scroll-sticky sticky top-24 w-full flex flex-col items-center justify-center z-10" style="perspective: 1000px;">
+        <div class="container-scroll-header text-center max-w-4xl space-y-4 -mb-4 sm:-mb-8 relative z-20 pointer-events-none">
+          <div class="flex flex-wrap items-center justify-center gap-3 pointer-events-auto">
+            {project.category && (
+              <span class="px-3.5 py-1.5 rounded-full bg-governor-bay-50 dark:bg-governor-bay-950/80 text-governor-bay-600 dark:text-governor-bay-300 text-xs font-bold border border-governor-bay-200/80 dark:border-governor-bay-800/80 font-hero-sans shadow-sm">
+                {project.category}
+              </span>
+            )}
+            <span class="text-xs font-mono text-slate-400 dark:text-slate-500 font-semibold px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800">
+              Published {project.year || '2025'}
+            </span>
+          </div>
+
+          <h1 class="font-hero-serif italic text-4xl sm:text-6xl lg:text-7xl font-bold tracking-tight text-slate-900 dark:text-white leading-none pointer-events-auto drop-shadow-[0_2px_12px_rgba(255,255,255,0.95)] dark:drop-shadow-[0_2px_12px_rgba(0,0,0,0.9)]">
+            {project.title}<span class="text-governor-bay-500 not-italic">.</span>
+          </h1>
+        </div>
+
+        <div
+          class="container-scroll-card relative w-full max-w-5xl rounded-[32px] sm:rounded-[40px] border-4 sm:border-8 border-slate-900 dark:border-slate-800/90 bg-slate-950 p-2 sm:p-4 shadow-2xl shadow-governor-bay-500/20"
+          style="transform-style: preserve-3d;"
+        >
+          <div class="w-full h-full rounded-[22px] sm:rounded-[28px] overflow-hidden bg-slate-900 aspect-[16/10] sm:aspect-[16/9] relative">
+            <img src={project.cover_image_url} alt={project.title} class="w-full h-full object-cover" />
+          </div>
+        </div>
+
       </div>
-
-      <h1 class="font-hero-serif italic text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
-        {project.title}<span class="text-governor-bay-500 not-italic">.</span>
-      </h1>
-
-      <p class="text-slate-600 dark:text-slate-300 text-lg sm:text-xl leading-relaxed font-hero-sans pt-1">
-        {project.short_description}
-      </p>
     </div>
 
-    <!-- 4-Column Clean Metadata Panel -->
-    <div class="grid grid-cols-2 md:grid-cols-4 gap-6 p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-lg mb-12 gsap-reveal font-hero-sans">
+    <div class="max-w-5xl mx-auto grid grid-cols-2 md:grid-cols-4 gap-6 p-6 sm:p-8 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 shadow-lg mb-16 gsap-reveal font-hero-sans relative z-20">
       <div>
         <span class="text-xs font-bold text-slate-400 dark:text-slate-500 uppercase tracking-wider block mb-1">Client</span>
         <span class="text-slate-900 dark:text-white font-bold text-sm sm:text-base">{project.client || 'Enterprise Partner'}</span>
@@ -95,16 +101,6 @@ const nextProject = currentIndex < projects.length - 1 ? projects[currentIndex +
             </a>
           )}
         </div>
-      </div>
-    </div>
-
-    <!-- Cover Image Hero Frame with Floating Badge -->
-    <div class="relative rounded-3xl overflow-hidden shadow-xl border border-slate-200/80 dark:border-slate-800/80 mb-16 aspect-[16/9] max-h-[600px] bg-slate-100 dark:bg-slate-800 gsap-reveal">
-      <img src={project.cover_image_url} alt={project.title} class="w-full h-full object-cover" />
-      
-      <div class="absolute bottom-4 left-4 z-10 hidden sm:flex items-center gap-2 px-4 py-2 rounded-full bg-slate-900/90 backdrop-blur-md text-xs font-bold text-white border border-slate-800 font-hero-sans shadow-lg">
-        <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
-        <span>Verified Metric • Production Architecture</span>
       </div>
     </div>
 
@@ -181,13 +177,15 @@ const nextProject = currentIndex < projects.length - 1 ? projects[currentIndex +
 </BaseLayout>
 
 <script>
-  import { initScrollReveals } from '../../utils/gsap';
+  import { initScrollReveals, initContainerScrollAnimations } from '../../animations';
 
   document.addEventListener('DOMContentLoaded', () => {
     initScrollReveals();
+    initContainerScrollAnimations();
   });
 
   document.addEventListener('astro:page-load', () => {
     initScrollReveals();
+    initContainerScrollAnimations();
   });
 </script>
