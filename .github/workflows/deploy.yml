@@ -23,15 +23,27 @@ jobs:
           key: ${{ secrets.VPS_SSH_KEY }}
           port: ${{ secrets.VPS_PORT || 22 }}
           script: |
+            set -e
+
+            # 1. Masuk ke folder project VPS (atau clone jika belum ada)
             if [ ! -d "~/portfolio-v2" ]; then
-              git clone git@github.com:${{ github.repository }}.git ~/portfolio-v2
+              git clone https://github.com/${{ github.repository }}.git ~/portfolio-v2
             fi
 
             cd ~/portfolio-v2
 
-            git pull origin master || git pull origin main
+            # 2. Ambil perubahan terbaru dan paksa update ke origin/master
+            git fetch origin master
+            git reset --hard origin/master
 
+            echo "🚀 Deployed Commit:"
+            git log -n 1 --oneline
+
+            # 3. Rebuild container dengan kode paling gres tanpa cache
             docker compose -f docker-compose.prod.yml build --no-cache frontend backend
 
+            # 4. Restrukturisasi dan nyalakan container baru
             docker compose -f docker-compose.prod.yml up -d --remove-orphans
+
+            # 5. Clean up image lama yang tidak terpakai
             docker image prune -f
