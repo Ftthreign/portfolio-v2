@@ -44,22 +44,17 @@ const {
     </script>
   </head>
   <body class="bg-surface dark:bg-[#0b1120] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans relative overflow-x-hidden transition-colors duration-400">
-    <!-- Custom GSAP Magnetic Cursor -->
     <div class="custom-cursor hidden md:block"></div>
     <div class="custom-cursor-follower hidden md:block"></div>
 
-    <!-- Floating Navigation Bar -->
     <Navbar />
 
-    <!-- Main Content Area -->
     <main class="flex-grow pt-24 md:pt-28">
       <slot />
     </main>
 
-    <!-- Footer -->
     <Footer />
 
-    <!-- GSAP Initialization Script -->
     <script>
       import { initCustomCursor, initScrollReveals } from '../utils/gsap';
 

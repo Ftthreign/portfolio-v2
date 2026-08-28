@@ -3,11 +3,12 @@ const pathname = new URL(Astro.request.url).pathname;
 
 const navItems = [
   { name: 'Home', href: '/', num: '01' },
-  { name: 'Work', href: '/work', num: '02' },
-  { name: 'Services', href: '/services', num: '03' },
-  { name: 'About', href: '/about', num: '04' },
-  { name: 'Blog', href: '/blog', num: '05' },
-  { name: 'Contact', href: '/contact', num: '06' },
+  { name: 'About', href: '/about', num: '02' },
+  { name: 'Projects', href: '/projects', num: '03' },
+  { name: 'Services', href: '/services', num: '04' },
+  { name: 'Certificate', href: '/certificate', num: '05' },
+  { name: 'Blog', href: '/blog', num: '06' },
+  { name: 'Contact', href: '/contact', num: '07' },
 ];
 
 const socialLinks = [
@@ -18,20 +19,17 @@ const socialLinks = [
 ---
 
 <!-- Fixed Header Bar -->
-<header class="fixed top-4 left-1/2 -translate-x-1/2 z-50 w-[94%] max-w-container transition-all duration-300">
+<header class="fixed top-4 left-1/2 -translate-x-1/2 z-[100] w-[94%] max-w-container transition-all duration-300">
   <nav class="glass-nav rounded-full px-6 py-3 shadow-glass flex items-center justify-between border border-slate-200/80 dark:border-slate-800/80 dark:bg-slate-900/80">
     <!-- Brand Logo -->
-    <a href="/" class="flex items-center gap-2.5 group magnetic z-50">
-      <div class="w-8 h-8 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 flex items-center justify-center font-bold text-xs shadow-sm group-hover:scale-105 transition-transform">
-        FAF
-      </div>
+    <a href="/" class="flex items-center gap-2.5 group magnetic z-[100]">
       <span class="font-hero-serif italic text-lg font-bold tracking-tight text-slate-900 dark:text-white group-hover:text-governor-bay-600 transition-colors">
-        Fadhil Abdul Fattah<span class="text-governor-bay-500 not-italic">.</span>
+        Ftthreign <span class="text-governor-bay-500 not-italic">.</span>
       </span>
     </a>
 
     <!-- Right Controls: Theme Toggle & Hamburger Menu Button -->
-    <div class="flex items-center gap-3 z-50">
+    <div class="flex items-center gap-3 z-[100]">
       <!-- Dark/Light Theme Toggle Button -->
       <button
         type="button"
@@ -67,7 +65,7 @@ const socialLinks = [
 
 <!-- Full-Screen Interactive Overlay (Vice-Versa Theme Inverted) -->
 <div
-  class="nav-fullscreen-overlay fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-2xl text-slate-100 flex flex-col justify-between p-6 sm:p-12 lg:p-16 pointer-events-none select-none overflow-y-auto transition-colors duration-500"
+  class="nav-fullscreen-overlay fixed inset-0 z-[90] bg-slate-950/95 backdrop-blur-2xl text-slate-100 flex flex-col justify-between p-6 sm:p-12 lg:p-16 pointer-events-none select-none overflow-y-auto transition-colors duration-500"
   style="clip-path: circle(0px at 90% 4%);"
 >
   <!-- Ambient Radial Governor Bay Glow Backdrop -->

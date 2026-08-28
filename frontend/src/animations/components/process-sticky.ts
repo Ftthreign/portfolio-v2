@@ -16,6 +16,21 @@ export function initProcessSticky(): (() => void) | undefined {
 
   const cleanups: Array<() => void> = [];
 
+  // Helper to reliably scroll the active mobile pill into the horizontal center of its container
+  const centerMobilePill = (item: HTMLElement) => {
+    const container = item.parentElement as HTMLElement | null;
+    if (!container) return;
+    const containerWidth = container.clientWidth;
+    const itemLeft = item.offsetLeft;
+    const itemWidth = item.clientWidth;
+    const targetScrollLeft = itemLeft - containerWidth / 2 + itemWidth / 2;
+
+    container.scrollTo({
+      left: Math.max(0, targetScrollLeft),
+      behavior: 'smooth',
+    });
+  };
+
   const moveActiveIndicator = (activeIndex: number) => {
     const activeNav = navItems[activeIndex] as HTMLElement | undefined;
     if (activeNav && activeBg) {
@@ -40,7 +55,7 @@ export function initProcessSticky(): (() => void) | undefined {
 
   moveActiveIndicator(0);
 
-  // Bind smooth click listeners on nav items to center active cards vertically in viewport
+  // Desktop Nav Clicks
   navItems.forEach((item, index) => {
     const cardEl = stepCards[index] as HTMLElement | undefined;
     if (!cardEl) return;
@@ -49,7 +64,7 @@ export function initProcessSticky(): (() => void) | undefined {
       e.preventDefault();
       cardEl.scrollIntoView({
         behavior: 'smooth',
-        block: 'center',
+        block: 'start',
       });
     };
 
@@ -57,15 +72,32 @@ export function initProcessSticky(): (() => void) | undefined {
     cleanups.push(() => item.removeEventListener('click', onClick));
   });
 
+  // Mobile Nav Clicks (Centers active pill horizontally and scrolls card to vertical start offset)
   mobileNavItems.forEach((item, index) => {
     const cardEl = stepCards[index] as HTMLElement | undefined;
+    const mobileNavItem = item as HTMLElement;
     if (!cardEl) return;
 
     const onClick = (e: Event) => {
       e.preventDefault();
-      cardEl.scrollIntoView({
+      
+      // Update Mobile Nav Active Classes
+      mobileNavItems.forEach((btn) => {
+        btn.classList.remove('active', 'bg-governor-bay-600', '!text-white', 'shadow-md');
+        btn.classList.add('bg-slate-100', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
+      });
+      mobileNavItem.classList.add('active', 'bg-governor-bay-600', '!text-white', 'shadow-md');
+      mobileNavItem.classList.remove('bg-slate-100', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
+
+      // Scroll mobile pill smoothly into container center
+      centerMobilePill(mobileNavItem);
+
+      // Scroll step card vertically with 180px clearance (Navbar 80px + Tab Bar 60px + 40px Gap)
+      const cardRect = cardEl.getBoundingClientRect();
+      const targetTop = cardRect.top + window.scrollY - 180;
+      window.scrollTo({
+        top: Math.max(0, targetTop),
         behavior: 'smooth',
-        block: 'center',
       });
     };
 
@@ -73,6 +105,7 @@ export function initProcessSticky(): (() => void) | undefined {
     cleanups.push(() => item.removeEventListener('click', onClick));
   });
 
+  // ScrollTrigger for Each Card
   stepCards.forEach((card, index) => {
     const cardEl = card as HTMLElement;
     const navItem = navItems[index] as HTMLElement | undefined;
@@ -97,12 +130,12 @@ export function initProcessSticky(): (() => void) | undefined {
           // Update Mobile Nav Active Classes
           mobileNavItems.forEach((item) => {
             item.classList.remove('active', 'bg-governor-bay-600', '!text-white', 'shadow-md');
-            item.classList.add('bg-slate-100', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400');
+            item.classList.add('bg-slate-100', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
           });
           if (mobileNavItem) {
             mobileNavItem.classList.add('active', 'bg-governor-bay-600', '!text-white', 'shadow-md');
-            mobileNavItem.classList.remove('bg-slate-100', 'dark:bg-slate-900', 'text-slate-600', 'dark:text-slate-400');
-            mobileNavItem.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+            mobileNavItem.classList.remove('bg-slate-100', 'dark:bg-slate-900', 'text-slate-700', 'dark:text-slate-300');
+            centerMobilePill(mobileNavItem);
           }
 
           // Active Card Highlight

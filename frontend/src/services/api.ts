@@ -103,6 +103,22 @@ const DEFAULT_PROJECTS: Project[] = [
     live_url: 'https://lumina.elianross.design',
     featured: true,
   },
+  {
+    id: '4',
+    title: 'Pulse Mobile Health Engine',
+    slug: 'pulse-mobile-health',
+    short_description: 'Cross-platform biometric tracking app with real-time vitals monitoring and offline sync.',
+    full_description: 'Architected high-performance mobile UI components with reactive state synchronization and encrypted offline data storage.',
+    cover_image_url: 'https://images.unsplash.com/photo-1576091160399-112ba8d25d1d?q=80&w=1200&auto=format&fit=crop',
+    tech_stack: ['Mobile UI', 'React Native', 'TypeScript', 'Tailwind', 'GraphQL'],
+    category: 'Mobile Application',
+    client: 'Pulse BioHealth',
+    role: 'Lead Mobile Engineer',
+    year: '2025',
+    repo_url: 'https://github.com/elianross/pulse-health',
+    live_url: 'https://pulse.elianross.design',
+    featured: true,
+  },
 ];
 
 const DEFAULT_POSTS: BlogPost[] = [

@@ -30,14 +30,24 @@ export function initHeroInteractiveAnimations(): (() => void) | undefined {
   ) as HTMLElement;
   if (heroTitle && !heroTitle.dataset.splitDone) {
     heroTitle.dataset.splitDone = "true";
-    const rawText = heroTitle.innerText;
-    heroTitle.innerHTML = rawText
-      .split("")
-      .map(
-        (char) =>
-          `<span class="char-span inline-block">${char === " " ? "&nbsp;" : char}</span>`,
-      )
-      .join("");
+    
+    const result: string[] = [];
+    const processNode = (node: Node, parentClasses: string = "") => {
+      if (node.nodeType === Node.TEXT_NODE) {
+        const text = node.textContent || "";
+        for (const char of text) {
+          const classAttr = parentClasses ? `char-span inline-block ${parentClasses}` : "char-span inline-block";
+          result.push(`<span class="${classAttr}">${char === " " ? "&nbsp;" : char}</span>`);
+        }
+      } else if (node.nodeType === Node.ELEMENT_NODE) {
+        const el = node as HTMLElement;
+        const classes = el.className || "";
+        el.childNodes.forEach((child) => processNode(child, classes));
+      }
+    };
+
+    heroTitle.childNodes.forEach((child) => processNode(child));
+    heroTitle.innerHTML = result.join("");
 
     const charSpans = heroTitle.querySelectorAll(".char-span");
     gsap.fromTo(

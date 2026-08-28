@@ -5,17 +5,23 @@ import TechStackMarquee from '../components/TechStackMarquee.astro';
 import ProcessSection from '../components/ProcessSection.astro';
 import FeaturedProjects from '../components/FeaturedProjects.astro';
 import ServicesTeaser from '../components/ServicesTeaser.astro';
-import { fetchProjects, fetchProfile } from '../services/api';
+import LatestBlog from '../components/LatestBlog.astro';
+import SkillsSection from '../components/SkillsSection.astro';
+import { fetchProjects, fetchProfile, fetchBlogPosts } from '../services/api';
 
 const profile = await fetchProfile();
 const projects = await fetchProjects();
-const featuredProjects = projects.slice(0, 3);
+const blogPosts = await fetchBlogPosts();
+const featuredProjects = projects.slice(0, 4);
+const latestBlogPosts = blogPosts.slice(0, 3);
 ---
 
 <BaseLayout title={`${profile.name} — Product Designer & Fullstack Engineer`} description={profile.bio}>
   <Hero name={profile.name} tagline={profile.tagline} />
   <TechStackMarquee />
   <ProcessSection />
+  <SkillsSection />
   <FeaturedProjects projects={featuredProjects} />
+  <LatestBlog posts={latestBlogPosts} />
   <ServicesTeaser />
 </BaseLayout>

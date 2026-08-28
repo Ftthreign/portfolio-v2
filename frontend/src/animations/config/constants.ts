@@ -54,6 +54,20 @@ export const SELECTORS = {
     staggerParent: ".gsap-stagger-parent",
     staggerChild: ".gsap-stagger-child",
   },
+  projects: {
+    section: ".featured-projects-section",
+    switcherBtn: ".project-variant-btn",
+    variantContainer: ".projects-variant-container",
+    cards: ".project-card-anim",
+    filterBtn: ".project-filter-btn",
+    filterItem: ".project-filter-item",
+  },
+  blog: {
+    section: ".latest-blog-section",
+    row: ".blog-editorial-row",
+    previewModal: ".blog-floating-preview",
+    previewImg: ".blog-floating-img",
+  },
 } as const;
 
 export const ROLES_LIST = [

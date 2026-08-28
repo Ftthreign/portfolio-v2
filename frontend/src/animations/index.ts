@@ -6,6 +6,9 @@ import { initHeroInteractiveAnimations } from './components/hero';
 import { initFullScreenNavbar } from './components/navbar';
 import { initTechMarquee } from './components/tech-marquee';
 import { initProcessSticky } from './components/process-sticky';
+import { initFeaturedProjectsAnimations } from './components/projects';
+import { initBlogRowAnimations } from './components/blog';
+import { initSkillsSectionAnimations } from './components/skills';
 
 export {
   gsap,
@@ -17,6 +20,9 @@ export {
   initFullScreenNavbar,
   initTechMarquee,
   initProcessSticky,
+  initFeaturedProjectsAnimations,
+  initBlogRowAnimations,
+  initSkillsSectionAnimations,
 };
 
 /**
@@ -33,6 +39,9 @@ export function initAppAnimations(): (() => void) | undefined {
     initHeroInteractiveAnimations(),
     initTechMarquee(),
     initProcessSticky(),
+    initFeaturedProjectsAnimations(),
+    initBlogRowAnimations(),
+    initSkillsSectionAnimations(),
   ];
 
   initScrollReveals();

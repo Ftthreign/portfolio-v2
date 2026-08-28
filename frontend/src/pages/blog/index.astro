@@ -1,68 +1,96 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Breadcrumb from '../../components/Breadcrumb.astro';
 import { fetchBlogPosts } from '../../services/api';
 
 const posts = await fetchBlogPosts();
 ---
 
-<BaseLayout title="Writing & Thought Leadership — Elian Ross" description="Articles on product design, design systems, motion UI, and software architecture by Elian Ross.">
-  <section class="max-w-container mx-auto px-6 lg:px-12 pt-12 pb-24">
-    <!-- Header -->
-    <div class="max-w-2xl mb-12 gsap-reveal">
-      <span class="text-xs font-bold uppercase tracking-widest text-emerald-600">Journal & Insights</span>
-      <h1 class="font-serif text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 mt-2">
-        Writing & Thoughts<span class="text-emerald-500">.</span>
+<BaseLayout title="Journal & Thought Leadership — Fadhil Abdul Fattah" description="Articles on software architecture, design systems, motion UI, and front-end engineering craftsmanship.">
+  <section class="latest-blog-section max-w-container mx-auto px-6 lg:px-12 pt-12 pb-24 relative select-none">
+    <!-- Reusable Breadcrumb Navigation -->
+    <Breadcrumb items={[{ label: 'Journal & Articles' }]} />
+
+    <!-- Header Section -->
+    <div class="max-w-3xl mb-12 space-y-3 gsap-reveal">
+      <div class="flex items-center gap-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-governor-bay-500 animate-pulse"></span>
+        <span class="text-xs font-bold uppercase tracking-widest text-governor-bay-600 dark:text-governor-bay-400 font-hero-sans">
+          Journal & Thought Leadership
+        </span>
+      </div>
+      <h1 class="font-hero-serif italic text-4xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+        Writing & Insights<span class="text-governor-bay-500 not-italic">.</span>
       </h1>
-      <p class="text-slate-600 text-lg mt-4 leading-relaxed">
-        Perspectives on building resilient design systems, motion physics, and design leadership in modern tech organisations.
+      <p class="text-slate-600 dark:text-slate-300 text-base sm:text-lg leading-relaxed font-hero-sans pt-1">
+        Perspectives on building resilient design systems, motion physics, and engineering leadership in modern software teams.
       </p>
     </div>
 
-    <!-- Posts Grid -->
-    <div class="space-y-8 max-w-4xl gsap-stagger-parent">
-      {posts.map((post) => (
-        <article class="gsap-stagger-child bg-white p-8 sm:p-10 rounded-3xl border border-slate-200/80 shadow-card hover:shadow-hover hover:-translate-y-1 transition-all duration-300 flex flex-col md:flex-row gap-8 group">
-          <!-- Cover Thumbnail -->
-          {post.cover_image_url && (
-            <a href={`/blog/${post.slug}`} class="md:w-1/3 aspect-[16/10] rounded-2xl overflow-hidden bg-slate-100 shrink-0">
-              <img src={post.cover_image_url} alt={post.title} class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" />
-            </a>
-          )}
+    <!-- Text-First Editorial List Rows (No Card Box, Clean Hover Reveal) -->
+    {posts.length === 0 ? (
+      <div class="p-12 rounded-3xl bg-white dark:bg-slate-900 border border-slate-200/80 dark:border-slate-800/80 text-center font-hero-sans">
+        <p class="text-slate-900 dark:text-white font-bold text-lg mb-2">No Articles Published</p>
+        <p class="text-slate-500 text-sm">Add blog posts via the CMS admin portal.</p>
+      </div>
+    ) : (
+      <div class="space-y-1">
+        {posts.map((post, idx) => (
+          <a
+            href={`/blog/${post.slug}`}
+            data-cover-url={post.cover_image_url}
+            class="blog-editorial-row group block relative border-b border-slate-200/80 dark:border-slate-800/80 py-4 sm:py-8 px-3 sm:px-4 -mx-3 sm:-mx-4 rounded-xl sm:rounded-2xl transition-colors hover:bg-slate-100/60 dark:hover:bg-slate-800/40"
+          >
+            <div class="flex flex-col md:flex-row md:items-center justify-between gap-2.5 sm:gap-4">
+              <!-- Left: Number Index & Article Title -->
+              <div class="flex items-start md:items-center gap-3 sm:gap-6 flex-1 min-w-0">
+                <span class="font-mono text-[11px] sm:text-sm font-semibold text-slate-400 dark:text-slate-500 shrink-0 pt-0.5 md:pt-0">
+                  0{idx + 1}
+                </span>
+                <h2 class="blog-row-title font-hero-serif italic text-base sm:text-2xl lg:text-3xl font-bold text-slate-900 dark:text-white transition-colors group-hover:text-governor-bay-600 dark:group-hover:text-governor-bay-400 truncate">
+                  {post.title}
+                </h2>
+              </div>
 
-          <!-- Post Content -->
-          <div class="flex-1 flex flex-col justify-between space-y-4">
-            <div class="space-y-3">
-              <div class="flex items-center gap-3">
-                <div class="flex flex-wrap gap-1.5">
-                  {post.tags.map((tag) => (
-                    <span class="text-[11px] font-semibold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">
+              <!-- Right: Tags, Reading Time & Hover Arrow -->
+              <div class="flex items-center justify-between md:justify-end gap-3 sm:gap-6 shrink-0 pt-1 md:pt-0">
+                <div class="hidden sm:flex items-center gap-1.5">
+                  {post.tags.slice(0, 2).map((tag) => (
+                    <span class="text-[11px] font-semibold px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-600 dark:text-slate-300 border border-slate-200/60 dark:border-slate-700/60 font-hero-sans">
                       {tag}
                     </span>
                   ))}
                 </div>
-                <span class="text-xs text-slate-400 font-mono">• {post.reading_time_minutes} min read</span>
+
+                <span class="text-[11px] sm:text-xs font-mono text-slate-400 dark:text-slate-500 font-medium">
+                  {post.reading_time_minutes} min read
+                </span>
+
+                <span class="blog-row-arrow text-slate-400 dark:text-slate-500 group-hover:text-governor-bay-600 dark:group-hover:text-white font-bold text-sm sm:text-lg transition-colors">
+                  →
+                </span>
               </div>
-
-              <h2 class="font-serif text-2xl font-bold text-slate-900 group-hover:text-emerald-600 transition-colors">
-                <a href={`/blog/${post.slug}`}>{post.title}</a>
-              </h2>
-
-              <p class="text-slate-600 text-sm sm:text-base leading-relaxed">
-                {post.excerpt}
-              </p>
             </div>
+          </a>
+        ))}
+      </div>
+    )}
 
-            <div class="pt-2">
-              <a href={`/blog/${post.slug}`} class="text-xs font-bold text-slate-900 group-hover:text-emerald-600 inline-flex items-center gap-1 transition-colors">
-                <span>Read Full Article</span>
-                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"></path>
-                </svg>
-              </a>
-            </div>
-          </div>
-        </article>
-      ))}
+    <!-- GSAP Desktop Floating Cover Image Preview Modal (Follows Cursor on Row Hover) -->
+    <div class="blog-floating-preview fixed top-0 left-0 w-72 h-44 rounded-2xl overflow-hidden shadow-2xl pointer-events-none z-50 opacity-0 scale-85 border border-white/50 dark:border-slate-800 hidden lg:block bg-slate-900">
+      <img src="" alt="Article Preview" class="blog-floating-img w-full h-full object-cover" />
     </div>
   </section>
 </BaseLayout>
+
+<script>
+  import { initBlogRowAnimations } from '../../utils/gsap';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initBlogRowAnimations();
+  });
+
+  document.addEventListener('astro:page-load', () => {
+    initBlogRowAnimations();
+  });
+</script>

@@ -12,5 +12,8 @@ export {
   initFullScreenNavbar,
   initTechMarquee,
   initProcessSticky,
+  initFeaturedProjectsAnimations,
+  initBlogRowAnimations,
+  initSkillsSectionAnimations,
   initAppAnimations,
 } from '../animations';
