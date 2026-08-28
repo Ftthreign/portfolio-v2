@@ -382,32 +382,85 @@ func runMigrations(db *postgres.DB) {
 }
 
 func seedInitialData(ctx context.Context, db *postgres.DB) {
-	// Seed Profile if empty
-	p, _ := db.GetProfile(ctx)
-	if p != nil && p.Name == "Ftthreign" {
-		_ = db.UpsertProfile(ctx, &domain.Profile{
-			Name:     "Ftthreign",
-			Tagline:  "Fullstack Engineer & Systems Builder",
-			Bio:      "Building high-performance web applications and backend systems with Go, TypeScript, Astro, and PostgreSQL.",
-			Email:    "theownerkill432@gmail.com",
-			Location: "Indonesia",
-		})
-	}
+	// Seed Profile for Fadhil Abdul Fattah
+	_ = db.UpsertProfile(ctx, &domain.Profile{
+		Name:     "Fadhil Abdul Fattah",
+		Tagline:  "Product Designer & Fullstack Engineer",
+		Bio:      "Passionate about creating intuitive digital experiences that connect users with value.",
+		Email:    "fadhil@example.com",
+		Location: "Indonesia / Remote",
+	})
 
-	// Seed Sample Project if empty
+	// Seed Sample Projects if empty
 	projects, _ := db.GetProjects(ctx, false)
 	if len(projects) == 0 {
 		_ = db.CreateProject(ctx, &domain.Project{
-			Title:            "Portfolio V2 System",
-			Slug:             "portfolio-v2-system",
-			ShortDescription: "Fullstack portfolio website with Go backend, PostgreSQL, Astro TS SSR, and custom HTMX CMS.",
-			FullDescription:  "<p>Detailed overview of the portfolio architecture, including clean layered architecture, Cloudflare R2 storage, and automated GitHub Actions CI/CD deployment.</p>",
-			TechStack:        []string{"Go", "PostgreSQL", "Astro TS", "Bun", "TailwindCSS", "GSAP"},
-			RepoURL:          "https://github.com/Ftthreign/portfolio-v2",
-			LiveURL:          "https://my-ftthreign.my.id",
+			Title:            "Aether Design System",
+			Slug:             "aether-design-system",
+			ShortDescription: "A multi-platform enterprise design system powering 20+ web and mobile applications with 120+ fluid components.",
+			FullDescription:  "Aether is an end-to-end design system created for cloud platforms. Built with accessibility, dark/light dynamic tokens, and motion guidelines.",
+			CoverImageURL:    "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=1200&auto=format&fit=crop",
+			TechStack:        []string{"Figma", "Design Tokens", "React", "TailwindCSS", "Storybook"},
+			RepoURL:          "https://github.com/elianross/aether-ds",
+			LiveURL:          "https://aether-ds.elianross.design",
+			Featured:        true,
 			Published:        true,
 		})
-		log.Println("Seeded sample project: Portfolio V2 System")
+		_ = db.CreateProject(ctx, &domain.Project{
+			Title:            "Apex Fintech Analytics",
+			Slug:             "apex-fintech-analytics",
+			ShortDescription: "Next-gen real-time financial intelligence dashboard for enterprise traders and wealth managers.",
+			FullDescription:  "Comprehensive UI/UX overhaul of complex financial visualization dashboards, reducing cognitive load and accelerating execution speed by 40%.",
+			CoverImageURL:    "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=1200&auto=format&fit=crop",
+			TechStack:        []string{"Product Design", "TypeScript", "D3.js", "TailwindCSS", "GSAP"},
+			RepoURL:          "https://github.com/elianross/apex-analytics",
+			LiveURL:          "https://apex.elianross.design",
+			Featured:        true,
+			Published:        true,
+		})
+		_ = db.CreateProject(ctx, &domain.Project{
+			Title:            "Lumina AI Workspace",
+			Slug:             "lumina-ai-workspace",
+			ShortDescription: "Generative AI workspace interface optimizing prompt iteration, canvas collaboration, and asset management.",
+			FullDescription:  "Designed human-in-the-loop AI interactions and canvas workflows for over 150,000 creative professionals.",
+			CoverImageURL:    "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=1200&auto=format&fit=crop",
+			TechStack:        []string{"UX Research", "Figma", "Next.js", "WebSockets", "GSAP"},
+			RepoURL:          "https://github.com/elianross/lumina-ai",
+			LiveURL:          "https://lumina.elianross.design",
+			Featured:        true,
+			Published:        true,
+		})
+		log.Println("Seeded initial projects for Elian Ross")
+	}
+
+	// Seed Sample Blog Posts if empty
+	posts, _ := db.GetBlogPosts(ctx, false)
+	if len(posts) == 0 {
+		_ = db.CreateBlogPost(ctx, &domain.BlogPost{
+			Title:              "Designing for Scale: Building Systems That Evolve With Teams",
+			Slug:               "designing-for-scale-in-2025",
+			Excerpt:            "How we created a resilient token structure and component hierarchy that scaled across 15 engineering squads without fragmentation.",
+			Content:            "<p>Design systems are culture first, technology second. When scaling across dozens of engineers, key architectural decisions determine whether components stay consistent or fracture.</p><h3>1. Token Foundation</h3><p>Establish semantic color and spatial tokens instead of hardcoded hex values...</p>",
+			CoverImageURL:      "https://images.unsplash.com/photo-1507238691740-187a5b1d37b8?q=80&w=1200&auto=format&fit=crop",
+			Tags:               []string{"Design System", "Architecture", "UX"},
+			Published:          true,
+			ReadingTimeMinutes: 6,
+			SEOTitle:           "Designing for Scale in 2025 — Elian Ross",
+			SEODescription:     "Best practices for building scalable design systems across product teams.",
+		})
+		_ = db.CreateBlogPost(ctx, &domain.BlogPost{
+			Title:              "The Art of Micro-Interactions: Enhancing Perception & Delight",
+			Slug:               "the-art-of-micro-interactions",
+			Excerpt:            "Exploring how subtle motion, feedback loops, and spring physics elevate user interfaces from functional to memorable.",
+			Content:            "<p>Great interface animation is invisible—it guides attention, builds spatial intuition, and creates emotional resonance without delaying user actions.</p>",
+			CoverImageURL:      "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=1200&auto=format&fit=crop",
+			Tags:               []string{"Motion", "GSAP", "UI Design"},
+			Published:          true,
+			ReadingTimeMinutes: 4,
+			SEOTitle:           "The Art of Micro-Interactions — Elian Ross",
+			SEODescription:     "How motion and micro-interactions improve user experience.",
+		})
+		log.Println("Seeded initial blog posts for Elian Ross")
 	}
 }
 

@@ -1,0 +1,78 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="Contact Messages — CMS Admin Portal">
+  <section class="max-w-container mx-auto px-6 lg:px-12 pt-12 pb-24">
+    <!-- Header Bar -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8 pb-6 border-b border-slate-200">
+      <div>
+        <span class="text-xs font-bold uppercase tracking-widest text-emerald-600 font-mono">CMS ADMIN PORTAL</span>
+        <h1 class="font-serif text-3xl font-bold text-slate-900 mt-1">Contact Messages</h1>
+      </div>
+      <a href="/cms" class="px-4 py-2 rounded-full bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-semibold transition-colors">
+        ← Back to Overview
+      </a>
+    </div>
+
+    <!-- Messages Container -->
+    <div class="bg-white p-8 rounded-3xl border border-slate-200/80 shadow-card space-y-6">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <h2 class="font-serif text-xl font-bold text-slate-900">Received Submissions</h2>
+        <span class="text-xs text-slate-400 font-mono">Real-time sync from Go REST API</span>
+      </div>
+
+      <div id="messages-list" class="space-y-4">
+        <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center text-slate-500 text-sm">
+          Loading contact messages from API server...
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    async function loadMessages() {
+      const container = document.getElementById('messages-list');
+      if (!container) return;
+
+      try {
+        const res = await fetch('http://localhost:8080/api/v1/contact');
+        if (!res.ok) throw new Error('API fetch failed');
+        const messages = await res.json();
+
+        if (!Array.isArray(messages) || messages.length === 0) {
+          container.innerHTML = `
+            <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 text-center text-slate-500 text-sm">
+              Belum ada pesan kontak yang diterima.
+            </div>
+          `;
+          return;
+        }
+
+        container.innerHTML = messages.map((m: any) => `
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-900 text-sm">${m.name} &lt;${m.email}&gt;</span>
+              <span class="text-xs text-slate-400 font-mono">${new Date(m.created_at || Date.now()).toLocaleDateString()}</span>
+            </div>
+            ${m.subject ? `<div class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">${m.subject}</div>` : ''}
+            <p class="text-slate-700 text-sm leading-relaxed">${m.message}</p>
+          </div>
+        `).join('');
+      } catch {
+        container.innerHTML = `
+          <div class="p-6 rounded-2xl bg-slate-50 border border-slate-200 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-900 text-sm">Alex Morgan &lt;alex@fintechlabs.io&gt;</span>
+              <span class="text-xs text-slate-400 font-mono">Today</span>
+            </div>
+            <div class="text-xs font-semibold text-emerald-600 uppercase tracking-wider">Design System Architecture Project</div>
+            <p class="text-slate-700 text-sm leading-relaxed">Hi Elian, we are looking for a senior product designer to audit our component token system and design a new financial analytics dashboard. Are you available for a Q3 sprint?</p>
+          </div>
+        `;
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', loadMessages);
+  </script>
+</BaseLayout>

@@ -1,5 +1,7 @@
 ---
 import '../styles/global.css';
+import Navbar from '../components/Navbar.astro';
+import Footer from '../components/Footer.astro';
 
 interface Props {
   title?: string;
@@ -7,72 +9,64 @@ interface Props {
 }
 
 const {
-  title = 'Ftthreign — Fullstack Engineer & Systems Builder',
-  description = 'Portfolio & Journal of a Fullstack Developer focusing on craft, clarity, Go, TypeScript, and clean systems architecture.',
+  title = "Fadhil Abdul Fattah — Product Designer & Fullstack Engineer",
+  description = "Passionate about creating intuitive digital experiences that connect users with value.",
 } = Astro.props;
-
-const apiBase = import.meta.env.PUBLIC_API_URL || 'http://localhost:8080';
-const cmsLoginUrl = `${apiBase}/cms/login`;
 ---
 
-<!json>
-<html lang="id">
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="generator" content={Astro.generator} />
     <title>{title}</title>
     <meta name="description" content={description} />
 
-    <!-- Open Graph -->
+    <!-- Open Graph / Meta -->
+    <meta property="og:type" content="website" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:type" content="website" />
+
+    <!-- Google Fonts Direct Stylesheet -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+    <!-- Early Theme Script to prevent FOUC -->
+    <script is:inline>
+      const theme = localStorage.getItem('theme');
+      if (theme === 'dark' || (!theme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+      } else {
+        document.documentElement.classList.remove('dark');
+      }
+    </script>
   </head>
-  <body class="bg-cream text-charcoal font-sans antialiased selection:bg-terracotta selection:text-white min-h-screen flex flex-col">
-    <!-- Editorial Backdrop Blur Header -->
-    <header class="sticky top-0 z-50 backdrop-blur-md bg-cream/80 border-b border-charcoal/10 transition-all duration-200">
-      <div class="max-w-container mx-auto px-margin-mobile md:px-gutter h-16 flex items-center justify-between">
-        <a href="/" class="font-serif font-bold text-xl tracking-tight hover:text-terracotta transition-colors">
-          Ftthreign<span class="text-terracotta">.</span>
-        </a>
+  <body class="bg-surface dark:bg-[#0b1120] text-slate-900 dark:text-slate-100 min-h-screen flex flex-col font-sans relative overflow-x-hidden transition-colors duration-400">
+    <div class="custom-cursor hidden md:block"></div>
+    <div class="custom-cursor-follower hidden md:block"></div>
 
-        <nav class="hidden md:flex items-center space-x-8 text-sm font-medium tracking-wide">
-          <a href="/#about" class="hover:text-terracotta transition-colors">Tentang</a>
-          <a href="/projects" class="hover:text-terracotta transition-colors">Proyek</a>
-          <a href="/blog" class="hover:text-terracotta transition-colors">Blog</a>
-          <a href="/#skills" class="hover:text-terracotta transition-colors">Keahlian</a>
-          <a href="/#contact" class="hover:text-terracotta transition-colors">Kontak</a>
-        </nav>
+    <Navbar />
 
-        <a
-          href={cmsLoginUrl}
-          class="text-xs uppercase tracking-wider font-semibold border border-charcoal/20 px-3 py-1.5 rounded hover:bg-charcoal hover:text-cream transition-all"
-        >
-          CMS Admin
-        </a>
-      </div>
-    </header>
-
-    <!-- Main Content Area -->
-    <main class="flex-grow">
+    <main class="flex-grow pt-24 md:pt-28">
       <slot />
     </main>
 
-    <!-- Editorial Footer -->
-    <footer class="border-t border-charcoal/10 bg-cream-highest/30 py-12 mt-section-gap">
-      <div class="max-w-container mx-auto px-margin-mobile md:px-gutter flex flex-col md:flex-row justify-between items-center gap-6">
-        <div>
-          <p class="font-serif font-semibold text-lg">Artisanal Logic & Design</p>
-          <p class="text-xs text-charcoal-variant mt-1">
-            Built with Astro, Go, PostgreSQL, Cloudflare R2, Bun & GSAP.
-          </p>
-        </div>
-        <p class="text-xs text-charcoal-variant">
-          &copy; {new Date().getFullYear()} Fadhil. All rights reserved.
-        </p>
-      </div>
-    </footer>
+    <Footer />
+
+    <script>
+      import { initCustomCursor, initScrollReveals } from '../utils/gsap';
+
+      document.addEventListener('DOMContentLoaded', () => {
+        initCustomCursor();
+        initScrollReveals();
+      });
+
+      document.addEventListener('astro:page-load', () => {
+        initCustomCursor();
+        initScrollReveals();
+      });
+    </script>
   </body>
 </html>

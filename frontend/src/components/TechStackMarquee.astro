@@ -1,0 +1,62 @@
+---
+import { fetchTechStack, DEFAULT_TECH_STACK } from '../services/api';
+
+const techStack = await fetchTechStack().catch(() => DEFAULT_TECH_STACK);
+
+const softSkills = [
+  'Product Strategy',
+  'System Architecture',
+  'Design Leadership',
+  'User Research',
+  'Agile Delivery',
+  'Problem Solving',
+  'Creative Direction',
+  'Technical Writing',
+];
+
+// Duplicate items array 3x to guarantee seamless infinite loop
+const softMarqueeItems = [...softSkills, ...softSkills, ...softSkills];
+const techMarqueeItems = [...techStack, ...techStack, ...techStack];
+---
+
+<section class="tech-marquee-container relative w-full py-8 md:py-14 overflow-hidden select-none my-4 sm:my-8">
+  <!-- Zig-Zag Staggered Dual Ribbon Container (Zero Overlap, Soft Skills Top / Hard Skills Bottom) -->
+  <div class="relative w-full flex flex-col items-center justify-center gap-4 sm:gap-6">
+    <!-- Ribbon 1: Soft Skills (Dark Slate Ribbon, Rotated -rotate-2) -->
+    <div class="relative w-full -rotate-2 bg-slate-900 dark:bg-slate-950 py-3.5 sm:py-4.5 text-white shadow-lg border-y border-slate-800 overflow-hidden z-10 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+      <div class="soft-marquee-track flex items-center gap-8 sm:gap-12 whitespace-nowrap w-max">
+        {softMarqueeItems.map((item) => (
+          <span class="inline-flex items-center gap-3 text-sm sm:text-lg md:text-xl lg:text-2xl font-bold font-hero-serif italic tracking-wider text-slate-100">
+            <span class="text-governor-bay-400 not-italic font-bold text-xs sm:text-sm">❖</span>
+            <span>{item}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+
+    <!-- Ribbon 2: Hard Skills / Tech Stack (Governor Bay Blue Ribbon, Rotated rotate-2 - Zig-Zag Angle) -->
+    <div class="relative w-full rotate-2 bg-governor-bay-600 py-3.5 sm:py-4.5 text-white shadow-lg border-y border-governor-bay-500/40 overflow-hidden z-10 [mask-image:linear-gradient(to_right,transparent,black_6%,black_94%,transparent)]">
+      <div class="tech-marquee-track flex items-center gap-8 sm:gap-12 whitespace-nowrap w-max">
+        {techMarqueeItems.map((item) => (
+          <span class="inline-flex items-center gap-3 text-sm sm:text-lg md:text-xl lg:text-2xl font-bold font-hero-serif italic tracking-wider text-white">
+            <span class="text-governor-bay-200 not-italic font-bold text-xs sm:text-sm">✦</span>
+            <span>{item}</span>
+          </span>
+        ))}
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Client Script to Initialize Tech & Soft Marquee Loop -->
+<script>
+  import { initTechMarquee } from '../utils/gsap';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initTechMarquee();
+  });
+
+  document.addEventListener('astro:page-load', () => {
+    initTechMarquee();
+  });
+</script>

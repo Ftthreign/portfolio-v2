@@ -1,0 +1,159 @@
+---
+import type { Project } from '../services/api';
+
+interface Props {
+  projects: Project[];
+}
+
+const { projects } = Astro.props;
+---
+
+<section class="featured-projects-section max-w-container mx-auto px-6 lg:px-12 py-20 relative select-none">
+  <!-- Section Header -->
+  <div class="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6 pb-6 border-b border-slate-200/80 dark:border-slate-800/80 gsap-reveal">
+    <div class="space-y-2">
+      <div class="flex items-center gap-2">
+        <span class="w-2 h-2 rounded-full bg-governor-bay-500"></span>
+        <span class="text-xs font-bold uppercase tracking-widest text-governor-bay-600 dark:text-governor-bay-400 font-hero-sans">
+          Selected Portfolio Showcase
+        </span>
+      </div>
+      <h2 class="font-hero-serif italic text-3xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white">
+        Featured Case Studies<span class="text-governor-bay-500 not-italic">.</span>
+      </h2>
+      <p class="text-slate-600 dark:text-slate-300 text-sm max-w-xl font-hero-sans pt-1">
+        Explore high-impact case studies engineered for scale, dynamic token systems, and motion-rich user experiences.
+      </p>
+    </div>
+
+    <a
+      href="/projects"
+      class="text-slate-900 dark:text-white font-semibold hover:text-governor-bay-600 dark:hover:text-governor-bay-400 text-sm flex items-center gap-2 transition-colors font-hero-sans shrink-0 group"
+    >
+      <span>View All Projects ({projects.length})</span>
+      <span class="transition-transform duration-300 group-hover:translate-x-1">→</span>
+    </a>
+  </div>
+
+  <!-- Clean 4-Card Asymmetric Bento Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+    {projects.map((project, idx) => {
+      const isWide = idx === 0 || idx === 3;
+      const isReverse = idx === 3;
+
+      return (
+        <article
+          class={`project-card-anim project-card-tilt group bg-white dark:bg-slate-900 text-slate-900 dark:text-white rounded-3xl border border-slate-200/80 dark:border-slate-800/80 shadow-sm hover:shadow-xl transition-all duration-300 overflow-hidden flex flex-col justify-between relative ${
+            isWide ? `lg:col-span-2 flex-col ${isReverse ? 'lg:flex-row-reverse' : 'lg:flex-row'}` : 'lg:col-span-1'
+          }`}
+        >
+          <!-- Image Container -->
+          <div class={`relative overflow-hidden bg-slate-100 dark:bg-slate-800/80 ${isWide ? 'lg:w-1/2 min-h-[280px] sm:min-h-[340px]' : 'aspect-[16/10]'}`}>
+            <img
+              src={project.cover_image_url}
+              alt={project.title}
+              class="project-tilt-target w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 ease-out"
+              loading="lazy"
+            />
+
+            <!-- Category Badge -->
+            {project.category && (
+              <div class="absolute top-4 left-4 z-10">
+                <span class="px-3.5 py-1.5 rounded-full bg-white/90 dark:bg-slate-900/90 backdrop-blur-md text-xs font-bold text-slate-800 dark:text-slate-200 border border-slate-200/60 dark:border-slate-800 font-hero-sans shadow-sm">
+                  {project.category}
+                </span>
+              </div>
+            )}
+          </div>
+
+          <!-- Content Container -->
+          <div class={`p-6 sm:p-8 flex-1 flex flex-col justify-between space-y-6 relative z-10 ${isWide ? 'lg:w-1/2' : ''}`}>
+            <div class="space-y-4">
+              <!-- Meta Header -->
+              <div class="flex items-center justify-between border-b border-slate-100 dark:border-slate-800/80 pb-3">
+                <span class="text-xs font-bold uppercase tracking-wider text-governor-bay-600 dark:text-governor-bay-400 font-hero-sans">
+                  {project.client || 'Featured Case Study'}
+                </span>
+                {project.year && (
+                  <span class="text-xs font-mono text-slate-500 dark:text-slate-400 font-medium px-2.5 py-1 rounded-full bg-slate-100 dark:bg-slate-800">
+                    {project.year}
+                  </span>
+                )}
+              </div>
+
+              <!-- Title & Description -->
+              <div>
+                <h3 class="font-hero-serif italic text-2xl sm:text-3xl font-bold text-slate-900 dark:text-white group-hover:text-governor-bay-600 dark:group-hover:text-governor-bay-400 transition-colors">
+                  <a href={`/projects/${project.slug}`}>{project.title}</a>
+                </h3>
+                <p class="text-slate-600 dark:text-slate-300 text-sm sm:text-base leading-relaxed font-hero-sans mt-2 line-clamp-3">
+                  {project.short_description}
+                </p>
+              </div>
+
+              <!-- Deliverables Box (Wide Cards Only) -->
+              {isWide && (
+                <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-4 space-y-2">
+                  <p class="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 font-hero-sans">
+                    Key Specifications
+                  </p>
+                  <div class="grid grid-cols-2 gap-2 text-xs text-slate-700 dark:text-slate-300 font-hero-sans font-medium">
+                    <div class="flex items-center gap-1.5">✓ Scalable Architecture</div>
+                    <div class="flex items-center gap-1.5">✓ 100% WCAG AA</div>
+                    <div class="flex items-center gap-1.5">✓ Motion Micro-Interactions</div>
+                    <div class="flex items-center gap-1.5">✓ React / Tailwind Specs</div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            <!-- Footer: Tech Stack & Action Link -->
+            <div class="pt-4 border-t border-slate-100 dark:border-slate-800 space-y-4">
+              <div class="flex flex-wrap gap-1.5">
+                {project.tech_stack.slice(0, isWide ? 5 : 3).map((tech) => (
+                  <span class="text-[11px] font-medium px-3 py-1 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-700 dark:text-slate-300 font-hero-sans border border-slate-200/60 dark:border-slate-700/60">
+                    {tech}
+                  </span>
+                ))}
+              </div>
+
+              <a
+                href={`/projects/${project.slug}`}
+                class="project-cta-btn inline-flex items-center gap-2 text-xs sm:text-sm font-semibold text-slate-900 dark:text-white hover:text-governor-bay-600 dark:hover:text-governor-bay-400 transition-colors font-hero-sans"
+              >
+                <span>Explore Case Study</span>
+                <span class="project-cta-arrow inline-block">→</span>
+              </a>
+            </div>
+          </div>
+        </article>
+      );
+    })}
+  </div>
+
+  <!-- Bottom CTA: View All Projects -->
+  <div class="mt-16 text-center">
+    <a
+      href="/projects"
+      class="inline-flex items-center gap-2.5 px-8 py-4 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-governor-bay-600 dark:hover:bg-governor-bay-400 dark:hover:text-white font-bold text-sm shadow-md hover:shadow-xl transition-all duration-300 font-hero-sans"
+    >
+      <span>View Complete Projects Archive ({projects.length})</span>
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+      </svg>
+    </a>
+  </div>
+</section>
+
+<!-- Client Script to Initialize GSAP Animation Controller -->
+<script>
+  import { initFeaturedProjectsAnimations } from '../utils/gsap';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initFeaturedProjectsAnimations();
+  });
+
+  document.addEventListener('astro:page-load', () => {
+    initFeaturedProjectsAnimations();
+  });
+</script>

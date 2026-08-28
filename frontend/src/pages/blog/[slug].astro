@@ -1,53 +1,75 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
-import { fetchBlogPostBySlug } from '../../services/api';
+import Breadcrumb from '../../components/Breadcrumb.astro';
+import { fetchBlogPosts, fetchBlogPostBySlug } from '../../services/api';
+
+export async function getStaticPaths() {
+  const posts = await fetchBlogPosts();
+  return posts.map((p) => ({
+    params: { slug: p.slug },
+  }));
+}
 
 const { slug } = Astro.params;
-const post = slug ? await fetchBlogPostBySlug(slug) : null;
+const post = await fetchBlogPostBySlug(slug as string);
 
 if (!post) {
-  return Astro.redirect('/404');
+  return Astro.redirect('/blog');
 }
 ---
 
-<BaseLayout title={`${post.title} — Blog`} description={post.excerpt}>
-  <article class="max-w-container mx-auto px-margin-mobile md:px-gutter pt-12 pb-24">
-    <!-- Back Button -->
-    <a href="/blog" class="inline-flex items-center text-xs font-semibold uppercase tracking-wider text-charcoal-variant hover:text-terracotta transition-colors mb-8">
-      &larr; Kembali ke Daftar Blog
-    </a>
+<BaseLayout title={`${post.title} — Elian Ross`} description={post.excerpt}>
+  <article class="max-w-container mx-auto px-6 lg:px-12 pt-12 pb-24">
+    <!-- Reusable Breadcrumb Navigation -->
+    <Breadcrumb items={[{ label: 'Journal & Articles', href: '/blog' }, { label: post.title }]} />
 
     <!-- Header -->
-    <header class="mb-10 max-w-3xl">
-      <div class="flex items-center gap-3 text-xs text-charcoal-variant mb-4">
-        <span class="font-semibold uppercase tracking-wider text-terracotta">{post.reading_time_minutes} min read</span>
-        {post.published_at && (
-          <>
-            <span>&bull;</span>
-            <span>{new Date(post.published_at).toLocaleDateString('id-ID', { year: 'numeric', month: 'long', day: 'numeric' })}</span>
-          </>
-        )}
+    <header class="max-w-3xl mx-auto space-y-4 mb-12 gsap-reveal font-hero-sans">
+      <div class="flex items-center gap-3">
+        <div class="flex flex-wrap gap-1.5">
+          {post.tags.map((tag) => (
+            <span class="text-xs font-bold px-3.5 py-1 rounded-full bg-governor-bay-50 dark:bg-governor-bay-950/80 text-governor-bay-600 dark:text-governor-bay-300 border border-governor-bay-200/80 dark:border-governor-bay-800/80 font-hero-sans shadow-sm">
+              {tag}
+            </span>
+          ))}
+        </div>
+        <span class="text-xs text-slate-400 dark:text-slate-500 font-mono">• {post.reading_time_minutes} min read</span>
       </div>
-      <h1 class="font-serif text-3xl md:text-5xl font-bold text-charcoal leading-tight mb-6">
-        {post.title}
+
+      <h1 class="font-hero-serif italic text-3xl sm:text-5xl lg:text-6xl font-bold tracking-tight text-slate-900 dark:text-white leading-tight">
+        {post.title}<span class="text-governor-bay-500 not-italic">.</span>
       </h1>
-      <div class="flex flex-wrap gap-2">
-        {post.tags?.map((tag) => (
-          <span class="text-xs font-mono bg-sage/10 text-sage-dark px-2.5 py-1 rounded">
-            #{tag}
-          </span>
-        ))}
-      </div>
+
+      <p class="text-slate-600 dark:text-slate-300 text-lg sm:text-xl leading-relaxed font-hero-sans pt-1">
+        {post.excerpt}
+      </p>
     </header>
 
-    <!-- Cover Image -->
+    <!-- Cover Image Frame -->
     {post.cover_image_url && (
-      <div class="aspect-video w-full rounded-lg overflow-hidden border border-charcoal/10 bg-cream-container mb-12">
+      <div class="max-w-4xl mx-auto rounded-3xl overflow-hidden shadow-xl border border-slate-200/80 dark:border-slate-800/80 mb-16 aspect-[16/9] max-h-[550px] bg-slate-100 dark:bg-slate-800 gsap-reveal">
         <img src={post.cover_image_url} alt={post.title} class="w-full h-full object-cover" />
       </div>
     )}
 
-    <!-- Content -->
-    <div class="prose max-w-3xl text-charcoal-variant leading-relaxed text-base md:text-lg space-y-6" set:html={post.content || '<p>Konten tidak tersedia.</p>'} />
+    <!-- Clean Article Content (No Card Container) -->
+    <div
+      class="max-w-3xl mx-auto text-slate-700 dark:text-slate-300 space-y-6 leading-relaxed font-hero-sans text-base sm:text-lg font-normal gsap-reveal [&>p]:leading-relaxed [&>h3]:font-hero-serif [&>h3]:italic [&>h3]:text-2xl [&>h3]:font-bold [&>h3]:text-slate-900 dark:[&>h3]:text-white [&>h3]:mt-8 [&>h3]:mb-4"
+      set:html={post.content}
+    />
+
+    <!-- Article Footer Call to Action -->
+    <div class="max-w-3xl mx-auto mt-16 pt-8 border-t border-slate-200/80 dark:border-slate-800/80 flex items-center justify-between font-hero-sans gsap-reveal">
+      <a href="/blog" class="text-slate-900 dark:text-white font-semibold hover:text-governor-bay-600 dark:hover:text-governor-bay-400 flex items-center gap-2 transition-colors">
+        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path>
+        </svg>
+        <span>All Articles</span>
+      </a>
+
+      <a href="/contact" class="px-6 py-3 rounded-full bg-governor-bay-600 hover:bg-governor-bay-500 text-white font-bold text-sm shadow-md transition-all duration-200">
+        Discuss Ideas
+      </a>
+    </div>
   </article>
 </BaseLayout>

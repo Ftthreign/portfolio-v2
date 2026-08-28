@@ -1,0 +1,80 @@
+---
+interface Props {
+  name?: string;
+  tagline?: string;
+}
+
+const { name = "Fadhil Abdul Fattah" } = Astro.props;
+---
+
+<section class="hero-section relative isolate h-[calc(100dvh-5rem)] sm:h-[calc(100dvh-6rem)] min-h-[620px] flex flex-col justify-between pt-2 pb-8 overflow-hidden select-none">
+  <div
+    class="hero-ambient-glow absolute top-12 left-1/2 -translate-x-1/2 w-full max-w-[950px] h-[480px] pointer-events-none z-0 rounded-full"
+    style="background: radial-gradient(ellipse at 50% 50%, rgba(147, 197, 253, 0.65) 0%, rgba(59, 130, 246, 0.4) 45%, rgba(0, 0, 0, 0) 70%); filter: blur(65px);"
+  ></div>
+
+  <div class="hero-content max-w-container mx-auto px-4 sm:px-6 lg:px-12 w-full flex-1 flex flex-col justify-center relative">
+    <div class="text-center space-y-2 hero-anim-item relative z-20">
+      <h1 class="split-text-target font-hero-sans font-bold text-3xl sm:text-5xl md:text-6xl lg:text-7xl tracking-tight text-slate-950 dark:text-white leading-tight">
+        Hi I'm <span class="text-governor-bay-600 dark:text-governor-bay-400">{name}</span>
+      </h1>
+
+      <div class="py-2 sm:py-4 flex items-center justify-center relative min-h-[90px] sm:min-h-[160px] lg:min-h-[220px]">
+        <span class="rotating-role-target font-hero-serif italic font-normal text-3xl sm:text-5xl md:text-7xl lg:text-8xl xl:text-[7.5rem] text-slate-900 dark:text-governor-bay-200 tracking-tight leading-none inline-block px-2">
+          Full Stack Developer
+        </span>
+      </div>
+    </div>
+
+    <div class="hero-portrait hero-anim-item relative -mt-6 sm:-mt-12 md:-mt-16 lg:-mt-20 z-10 flex justify-center pointer-events-none">
+      <img
+        src="/sketch_me.png"
+        alt={name}
+        class="h-[260px] sm:h-[380px] md:h-[460px] lg:h-[520px] xl:h-[560px] w-auto object-contain drop-shadow-xl transition-transform"
+      />
+    </div>
+
+    <div class="hidden lg:block">
+      <div class="hero-anim-item absolute right-6 lg:right-12 top-1/2 -translate-y-24 z-20 text-right">
+        <p class="max-w-[220px] text-xs sm:text-sm text-slate-700 dark:text-slate-300 font-medium leading-relaxed font-hero-sans">
+          passionate about creating intuitive digital experiences that connect users with value.
+        </p>
+      </div>
+
+      <div class="hero-anim-item absolute right-6 lg:right-12 bottom-4 z-20">
+        <a
+          href="/contact"
+          class="magnetic px-7 py-3.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-governor-bay-600 dark:hover:bg-governor-bay-400 dark:hover:text-white font-semibold text-xs sm:text-sm flex items-center gap-2 shadow-xl hover:shadow-hover transition-all duration-300 font-hero-sans"
+        >
+          <span>→ Get in Touch</span>
+        </a>
+      </div>
+    </div>
+
+    <div class="hero-anim-item lg:hidden flex flex-col items-center gap-4 mt-4 relative z-20 text-center">
+      <p class="text-xs sm:text-sm text-slate-700 dark:text-slate-300 max-w-xs font-medium leading-relaxed font-hero-sans">
+        passionate about creating intuitive digital experiences that connect users with value.
+      </p>
+
+      <a
+        href="/contact"
+        class="px-7 py-3.5 rounded-full bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-governor-bay-600 dark:hover:bg-governor-bay-400 dark:hover:text-white text-xs sm:text-sm font-semibold shadow-md transition-colors font-hero-sans"
+      >
+        → Get in Touch
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- Client Script -->
+<script>
+  import { initHeroInteractiveAnimations } from '../utils/gsap';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initHeroInteractiveAnimations();
+  });
+
+  document.addEventListener('astro:page-load', () => {
+    initHeroInteractiveAnimations();
+  });
+</script>

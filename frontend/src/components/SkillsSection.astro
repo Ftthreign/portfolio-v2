@@ -1,0 +1,287 @@
+---
+// SkillsSection.astro — Interactive Solar System Skills Showcase
+// Clean, 100% Responsive & Adaptive Orbit Visualizer with Mobile Bottom Sheet Card
+
+interface Skill {
+  name: string;
+  level: number;
+  tag: string;
+  iconUrl: string;
+  desc: string;
+}
+
+interface SkillCategory {
+  id: string;
+  label: string;
+  icon: string;
+  skills: Skill[];
+}
+
+const skillCategories: SkillCategory[] = [
+  {
+    id: 'frontend',
+    label: 'Frontend & UI Engineering',
+    icon: '⬡',
+    skills: [
+      { name: 'TypeScript', level: 95, tag: 'Expert', iconUrl: 'https://cdn.simpleicons.org/typescript/3178C6', desc: 'Primary language for type-safe frontend & backend architecture' },
+      { name: 'React / Next.js', level: 92, tag: 'Expert', iconUrl: 'https://cdn.simpleicons.org/react/61DAFB', desc: 'SSR & client web app application architecture' },
+      { name: 'Astro TS', level: 90, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/astro/FF5D01', desc: 'Zero-JS fast content & portfolio sites' },
+      { name: 'Tailwind CSS', level: 97, tag: 'Expert', iconUrl: 'https://cdn.simpleicons.org/tailwindcss/06B6D4', desc: 'Utility-first fluid design systems' },
+      { name: 'GSAP Motion', level: 88, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/greensock/88CE02', desc: 'Fluid 60fps micro-interaction animation engine' },
+    ],
+  },
+  {
+    id: 'backend',
+    label: 'Backend & Architecture',
+    icon: '⬢',
+    skills: [
+      { name: 'Go (Golang)', level: 85, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/go/00ADD8', desc: 'High-concurrency microservices & REST APIs' },
+      { name: 'PostgreSQL', level: 88, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/postgresql/4169E1', desc: 'Relational database schema & index performance' },
+      { name: 'REST APIs', level: 93, tag: 'Expert', iconUrl: 'https://cdn.simpleicons.org/openapiinitiative/6BA539', desc: 'Clean OpenAPI & Go handler specifications' },
+      { name: 'Docker', level: 78, tag: 'Proficient', iconUrl: 'https://cdn.simpleicons.org/docker/2496ED', desc: 'Containerized deployment & microservice workflows' },
+      { name: 'Redis', level: 80, tag: 'Proficient', iconUrl: 'https://cdn.simpleicons.org/redis/FF4438', desc: 'In-memory caching & session state management' },
+    ],
+  },
+  {
+    id: 'design',
+    label: 'Design Systems & Motion',
+    icon: '◈',
+    skills: [
+      { name: 'Figma Tokens', level: 96, tag: 'Expert', iconUrl: 'https://cdn.simpleicons.org/figma/F24E1E', desc: 'Multi-brand design system & variable architecture' },
+      { name: 'Design Tokens', level: 94, tag: 'Expert', iconUrl: 'https://cdn.simpleicons.org/json/000000', desc: 'JSON dynamic theme tokens & semantic colors' },
+      { name: 'WCAG AA', level: 87, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/w3c/005A9C', desc: 'Accessible contrast & keyboard focus guidelines' },
+      { name: 'ScrollTrigger', level: 88, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/greensock/88CE02', desc: 'Scroll-linked spatial UI motion interactions' },
+    ],
+  },
+  {
+    id: 'product',
+    label: 'Product Strategy & Infrastructure',
+    icon: '◇',
+    skills: [
+      { name: 'UX Research', level: 85, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/figma/F24E1E', desc: 'Qualitative user journeys & interaction flows' },
+      { name: 'System Architecture', level: 82, tag: 'Proficient', iconUrl: 'https://cdn.simpleicons.org/json/000000', desc: 'Scalable cloud component & API specs' },
+      { name: 'GraphQL', level: 84, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/graphql/E10098', desc: 'Declarative data fetching queries' },
+      { name: 'Cloudflare R2', level: 86, tag: 'Advanced', iconUrl: 'https://cdn.simpleicons.org/cloudflare/F38020', desc: 'S3-compatible global edge storage' },
+    ],
+  },
+];
+
+const totalSkillsCount = skillCategories.reduce((acc, cat) => acc + cat.skills.length, 0);
+---
+
+<section
+  class="skills-section max-w-container mx-auto px-6 lg:px-12 py-12 sm:py-20 relative select-none"
+  aria-label="Skills and Technical Proficiency Showcase"
+  role="region"
+>
+
+  <!-- ═══════════════════════════════════════════════════ -->
+  <!-- SECTION HEADER -->
+  <!-- ═══════════════════════════════════════════════════ -->
+  <header class="relative z-10 mb-6 sm:mb-10 lg:max-w-[46%]">
+    <h2 class="font-hero-serif italic text-2xl sm:text-4xl lg:text-5xl font-bold text-slate-900 dark:text-white mb-2">
+      Skills & Proficiency<span class="text-governor-bay-500 not-italic">.</span>
+    </h2>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <!-- SOLAR SYSTEM ORBIT VISUALIZER -->
+  <!-- ═══════════════════════════════════════════════════════════════ -->
+  <div id="variant-orbital" class="skills-variant relative">
+
+    <!-- Category Filter Tabs -->
+    <nav class="flex items-center justify-start lg:justify-center gap-2 mb-6 sm:mb-8 overflow-x-auto no-scrollbar pb-1.5 -mx-6 px-6 lg:mx-0 lg:px-0" aria-label="Skill Category Filters">
+      <button
+        data-solar-filter="all"
+        class="solar-filter-btn active-solar-filter whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold font-hero-sans transition-all duration-300 bg-governor-bay-600 text-white shadow-md cursor-pointer shrink-0"
+        type="button"
+      >
+        🪐 All Solar System Orbits
+      </button>
+      {skillCategories.map((cat) => (
+        <button
+          data-solar-filter={cat.id}
+          class="solar-filter-btn whitespace-nowrap px-4 py-2 rounded-full text-xs font-bold font-hero-sans transition-all duration-300 bg-slate-100 dark:bg-slate-900 text-slate-600 dark:text-slate-400 border border-slate-200 dark:border-slate-800 hover:text-governor-bay-600 dark:hover:text-governor-bay-400 cursor-pointer shrink-0"
+          type="button"
+        >
+          {cat.icon} {cat.label}
+        </button>
+      ))}
+    </nav>
+
+    <!-- Canvas Container (Responsive Height: 460px on Mobile, 580px Tablet, 800px Desktop) -->
+    <div class="relative w-full h-[460px] sm:h-[580px] lg:h-[800px] flex items-center justify-center">
+
+      <!-- 📄 SIDE SKILL DETAIL CARD (Desktop Upper Right / Mobile Bottom Sheet Drawer) -->
+      <aside
+        id="solar-side-detail-wrap"
+        class="hidden opacity-0 fixed inset-x-3 bottom-3 sm:bottom-6 sm:inset-x-8 max-w-xl mx-auto lg:absolute lg:top-2 lg:bottom-auto lg:left-auto lg:right-16 lg:max-w-2xl lg:inset-auto w-full z-40 pointer-events-none"
+        aria-live="polite"
+      >
+        <article id="solar-side-detail" class="pointer-events-auto w-full bg-white/95 dark:bg-slate-900/95 backdrop-blur-xl border border-slate-200/90 dark:border-slate-800/90 rounded-3xl p-6 sm:p-9 shadow-2xl relative overflow-hidden space-y-4 sm:space-y-6">
+          
+          <!-- Mobile Pull Handle -->
+          <div class="w-12 h-1 bg-slate-300 dark:bg-slate-700 rounded-full mx-auto -mt-2 mb-3 lg:hidden"></div>
+
+          <!-- Header: Icon + Name + Tag -->
+          <div class="flex items-center justify-between gap-3 pb-3 sm:pb-4 border-b border-slate-100 dark:border-slate-800">
+            <div class="flex items-center gap-3 sm:gap-4">
+              <div id="solar-detail-icon-wrap" class="w-11 h-11 sm:w-15 sm:h-15 rounded-2xl bg-slate-100 dark:bg-slate-800 p-2.5 sm:p-3 border border-slate-200/80 dark:border-slate-700/80 flex items-center justify-center shrink-0">
+                <img id="solar-detail-icon" src="https://cdn.simpleicons.org/typescript/3178C6" alt="Skill Icon" class="w-6 h-6 sm:w-9 sm:h-9 object-contain" />
+              </div>
+              <div>
+                <h3 id="solar-detail-name" class="font-hero-serif italic font-bold text-xl sm:text-3xl lg:text-4xl text-slate-900 dark:text-white leading-tight">TypeScript</h3>
+                <span class="text-[11px] sm:text-xs text-slate-500 dark:text-slate-400 font-hero-sans">Production Verified Specification</span>
+              </div>
+            </div>
+            <span id="solar-detail-tag" class="text-[11px] sm:text-xs font-hero-sans font-bold px-3 py-1 sm:px-4 sm:py-1.5 rounded-full bg-governor-bay-600 text-white shadow-sm shrink-0">Expert</span>
+          </div>
+
+          <!-- Proficiency Level Meter -->
+          <div class="space-y-1.5 sm:space-y-2">
+            <div class="flex items-center justify-between text-xs sm:text-sm font-hero-sans">
+              <span class="text-slate-500 dark:text-slate-400 font-medium">Proficiency Gauge</span>
+              <span id="solar-detail-level" class="font-bold text-governor-bay-600 dark:text-governor-bay-400 text-sm sm:text-lg">95%</span>
+            </div>
+            <div class="h-2.5 bg-slate-100 dark:bg-slate-800 rounded-full overflow-hidden">
+              <div id="solar-detail-bar" class="h-full bg-governor-bay-600 rounded-full transition-all duration-500" style="width: 95%;"></div>
+            </div>
+          </div>
+
+          <!-- Description -->
+          <p id="solar-detail-desc" class="text-slate-600 dark:text-slate-300 text-xs sm:text-base leading-relaxed font-hero-sans line-clamp-2 sm:line-clamp-none">
+            Primary language for type-safe frontend & backend architecture across production web applications.
+          </p>
+
+          <!-- Key Performance Metric Box -->
+          <div class="bg-slate-50 dark:bg-slate-800/50 border border-slate-200/60 dark:border-slate-800/60 rounded-2xl p-3 sm:p-4 flex items-center justify-between gap-3">
+            <div class="flex items-center gap-2">
+              <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              <span class="text-[11px] sm:text-xs font-semibold text-slate-800 dark:text-slate-200 font-hero-sans">Verified Specification</span>
+            </div>
+            <span class="text-[11px] sm:text-xs font-bold text-governor-bay-600 dark:text-governor-bay-400 font-hero-sans">Production Ready</span>
+          </div>
+
+          <!-- Control Button: Resume Orbit -->
+          <button
+            id="solar-resume-btn"
+            class="w-full py-3 sm:py-3.5 px-6 rounded-2xl bg-slate-100 dark:bg-slate-800 hover:bg-governor-bay-600 hover:text-white text-slate-700 dark:text-slate-300 border border-slate-200 dark:border-slate-700 font-hero-sans text-xs sm:text-sm font-bold transition-all duration-300 flex items-center justify-center gap-2.5 group cursor-pointer"
+            type="button"
+          >
+            <span id="solar-status-dot" class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse group-hover:bg-white"></span>
+            <span id="solar-resume-text">▶ Close & Resume Solar Orbit</span>
+          </button>
+        </article>
+      </aside>
+
+      <!-- ☀️ ORBIT STAGE (Responsive Scaled: 0.52x Mobile, 0.72x Tablet, 1.0x Desktop) -->
+      <div
+        id="solar-orbit-stage-col"
+        class="solar-orbit-stage absolute inset-0 flex items-center justify-center scale-[0.52] sm:scale-[0.72] lg:scale-100 origin-center style-[will-change:transform]"
+      >
+
+        <!-- ☀️ CENTRAL SUN CORE -->
+        <div id="solar-sun-core" class="solar-sun relative z-30 flex flex-col items-center justify-center text-center group cursor-pointer pointer-events-auto" title="Click to Resume Orbit Rotation">
+          <div class="absolute w-48 h-48 sm:w-60 sm:h-60 rounded-full bg-governor-bay-600/25 blur-3xl animate-pulse pointer-events-none"></div>
+          <div class="absolute w-36 h-36 sm:w-44 sm:h-44 rounded-full bg-amber-400/20 blur-xl animate-ping pointer-events-none" style="animation-duration: 4s;"></div>
+
+          <div class="w-32 h-32 sm:w-44 sm:h-44 rounded-full bg-gradient-to-tr from-indigo-600 via-governor-bay-600 to-amber-500 p-0.5 shadow-2xl dark:shadow-[0_0_80px_rgba(79,70,229,0.8)] group-hover:scale-110 transition-transform duration-500">
+            <div class="w-full h-full rounded-full bg-white/95 dark:bg-slate-950/95 backdrop-blur-xl flex flex-col items-center justify-center p-4 text-slate-900 dark:text-white">
+              <span id="solar-sun-icon" class="text-3xl sm:text-5xl mb-1">☀️</span>
+              <img id="solar-sun-logo" src="" alt="Selected Stack" class="w-10 h-10 sm:w-12 sm:h-12 object-contain hidden mb-1" />
+              <span id="solar-sun-title" class="font-hero-serif italic font-bold text-xs sm:text-base text-governor-bay-600 dark:text-amber-300 leading-tight">Fullstack Core</span>
+              <span id="solar-sun-count" class="font-mono text-[10px] sm:text-xs text-slate-500 dark:text-slate-400 mt-1">{totalSkillsCount} Planets</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 🪐 DYNAMIC CONCENTRIC ORBIT RINGS -->
+        {skillCategories.map((cat, ringIdx) => {
+          const diamSm = 340 + ringIdx * 160;
+          const radiusSm = diamSm / 2;
+          const speedSec = 30 + ringIdx * 12;
+          const spinDirection = ringIdx % 2 === 0 ? 'orbit-spin-cw' : 'orbit-spin-ccw';
+          const borderStyle = ringIdx % 2 === 0 ? 'border-dashed border-2' : 'border-solid border';
+          const ringBorderColor = ringIdx === 0 ? 'border-governor-bay-500/40 dark:border-governor-bay-400/30' : 'border-slate-300 dark:border-slate-800';
+
+          return (
+            <div
+              class={`solar-orbit-ring absolute rounded-full ${borderStyle} ${ringBorderColor} pointer-events-none`}
+              style={`width: ${diamSm}px; height: ${diamSm}px; --orbit-r: -${radiusSm}px;`}
+              data-ring-category={cat.id}
+            >
+              <div class={`orbit-rotator ${spinDirection} w-full h-full relative pointer-events-none`} style={`animation-duration: ${speedSec}s;`}>
+                {cat.skills.map((planet, idx) => {
+                  const angle = idx * (360 / cat.skills.length);
+                  return (
+                    <div
+                      class="solar-planet-node absolute top-1/2 left-1/2 cursor-pointer group/planet z-20 pointer-events-auto"
+                      data-category={cat.id}
+                      data-name={planet.name}
+                      data-icon={planet.iconUrl}
+                      data-desc={planet.desc}
+                      data-level={planet.level}
+                      data-tag={planet.tag}
+                      data-angle={angle}
+                      style={`transform: translate(-50%, -50%) rotate(${angle}deg) translateY(var(--orbit-r)) rotate(-${angle}deg);`}
+                      role="button"
+                      tabindex="0"
+                      aria-label={`Select ${planet.name} skill`}
+                    >
+                      <div class="relative group/planet p-1.5 sm:p-2">
+                        <img
+                          src={planet.iconUrl}
+                          alt={planet.name}
+                          class="planet-icon w-8 h-8 sm:w-11 sm:h-11 object-contain transition-all duration-300 group-hover/planet:scale-135 drop-shadow-md"
+                        />
+                        <div class="absolute bottom-full left-1/2 -translate-x-1/2 mb-2 px-3 py-1.5 rounded-full bg-slate-900 dark:bg-slate-100 text-white dark:text-slate-900 text-xs font-bold font-hero-sans whitespace-nowrap shadow-xl opacity-0 group-hover/planet:opacity-100 pointer-events-none transition-all duration-200 -translate-y-1 group-hover/planet:translate-y-0 z-30">
+                          {planet.name}
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    </div><!-- end canvas -->
+  </div>
+</section>
+
+<style>
+  @keyframes spin-cw {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+  }
+  .orbit-spin-cw {
+    animation: spin-cw 32s linear infinite;
+  }
+
+  @keyframes spin-ccw {
+    from { transform: rotate(360deg); }
+    to   { transform: rotate(0deg); }
+  }
+  .orbit-spin-ccw {
+    animation: spin-ccw 45s linear infinite;
+  }
+
+  /* Active Click Focus Planet Glow */
+  .solar-planet-node.active-planet .planet-icon {
+    transform: scale(1.5) !important;
+    filter: drop-shadow(0 0 16px rgba(37, 99, 235, 0.95)) brightness(1.2) !important;
+  }
+</style>
+
+<script>
+  import { initSkillsSectionAnimations } from '../utils/gsap';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initSkillsSectionAnimations();
+  });
+
+  document.addEventListener('astro:page-load', () => {
+    initSkillsSectionAnimations();
+  });
+</script>
