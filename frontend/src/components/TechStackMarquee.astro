@@ -1,0 +1,67 @@
+---
+import { fetchTechStack, DEFAULT_TECH_STACK } from '../services/api';
+
+const techStack = await fetchTechStack().catch(() => DEFAULT_TECH_STACK);
+
+// Duplicate items array 3x to guarantee seamless infinite loop
+const marqueeItems = [...techStack, ...techStack, ...techStack];
+const marqueeString = marqueeItems.map(item => `✦  ${item}`).join('     ');
+---
+
+<section class="tech-marquee-container relative w-full py-6 md:py-10 overflow-hidden select-none my-8">
+  <!-- ReactBits Curved Solid Primary Blue Ribbon SVG Marquee (Visible ≥ md / 768px) -->
+  <div class="hidden md:block relative w-full overflow-hidden">
+    <svg viewBox="0 0 1400 160" class="w-full h-auto preserve-3d overflow-visible" preserveAspectRatio="none">
+      <!-- Solid Primary Blue Curved Ribbon Background Band (#2563eb / Governor Bay 600) -->
+      <path
+        d="M 0,40 Q 350,0 700,40 T 1400,40 L 1400,120 Q 1050,160 700,120 T 0,120 Z"
+        fill="#2563eb"
+        class="filter drop-shadow-lg"
+      />
+
+      <!-- Curved Text Path Trajectory inside the Ribbon -->
+      <path
+        id="tech-marquee-curve-path"
+        d="M 0,80 Q 350,40 700,80 T 1400,80"
+        fill="transparent"
+        stroke="transparent"
+      />
+
+      <!-- Crisp White Curved Text Loop -->
+      <text class="font-hero-serif italic text-2xl lg:text-3xl font-bold fill-white tracking-wider">
+        <textPath
+          href="#tech-marquee-curve-path"
+          class="tech-marquee-textpath transition-colors duration-300"
+          startOffset="0%"
+        >
+          {marqueeString}
+        </textPath>
+      </text>
+    </svg>
+  </div>
+
+  <!-- Mobile Solid Primary Blue Curved Pill Ribbon Layout (< 768px) -->
+  <div class="md:hidden overflow-hidden relative w-[94%] max-w-container mx-auto py-3 px-4 rounded-full bg-governor-bay-600 text-white shadow-xl border border-governor-bay-500/40">
+    <div class="tech-marquee-track flex items-center gap-6 whitespace-nowrap w-max">
+      {marqueeItems.map((item) => (
+        <span class="inline-flex items-center gap-2.5 text-xs sm:text-sm font-bold font-hero-serif italic tracking-wide text-white">
+          <span class="text-governor-bay-200 not-italic font-bold">✦</span>
+          <span>{item}</span>
+        </span>
+      ))}
+    </div>
+  </div>
+</section>
+
+<!-- Client Script to Initialize Tech Marquee Loop -->
+<script>
+  import { initTechMarquee } from '../utils/gsap';
+
+  document.addEventListener('DOMContentLoaded', () => {
+    initTechMarquee();
+  });
+
+  document.addEventListener('astro:page-load', () => {
+    initTechMarquee();
+  });
+</script>

@@ -1,0 +1,96 @@
+---
+const currentYear = new Date().getFullYear();
+---
+
+<footer class="bg-slate-900 dark:bg-slate-950 text-white pt-20 pb-12 rounded-t-[2.5rem] mt-24 relative overflow-hidden border-t border-slate-800 transition-colors duration-400">
+  <!-- Governor Bay Soft Glow Effect -->
+  <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-[500px] h-[500px] bg-governor-bay-600/15 blur-[140px] pointer-events-none rounded-full"></div>
+
+  <div class="max-w-container mx-auto px-6 lg:px-12 relative z-10">
+    <!-- Top Big CTA Section -->
+    <div class="border-b border-slate-800 pb-16 mb-16 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-8">
+      <div class="max-w-2xl">
+        <span class="inline-block text-xs uppercase tracking-widest text-governor-bay-400 font-semibold mb-3 font-hero-sans">
+          Start a Conversation
+        </span>
+        <h2 class="font-hero-serif italic text-3xl sm:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight">
+          Have an ambitious product in mind? Let's craft it together.
+        </h2>
+      </div>
+
+      <a
+        href="/contact"
+        class="magnetic px-8 py-4 rounded-full bg-governor-bay-600 hover:bg-governor-bay-500 text-white font-bold text-sm sm:text-base shadow-lg shadow-governor-bay-600/20 hover:scale-105 transition-all duration-300 flex items-center gap-2 whitespace-nowrap font-hero-sans"
+      >
+        <span>Get in Touch</span>
+        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"></path>
+        </svg>
+      </a>
+    </div>
+
+    <!-- Navigation & Info Grid -->
+    <div class="grid grid-cols-1 md:grid-cols-4 gap-10 pb-12 border-b border-slate-800 text-slate-400 text-sm font-hero-sans">
+      <!-- Column 1: Brand info -->
+      <div class="md:col-span-1 space-y-4">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-full bg-white text-slate-900 font-bold flex items-center justify-center text-xs">
+            FAF
+          </div>
+          <span class="font-hero-serif italic text-lg font-bold text-white">Fadhil Abdul Fattah</span>
+        </div>
+        <p class="text-xs text-slate-400 leading-relaxed">
+          Full Stack Developer & Digital Architect based in Indonesia. Specializing in high-performance web applications, design systems, and motion UI.
+        </p>
+      </div>
+
+      <!-- Column 2: Navigation -->
+      <div class="space-y-3">
+        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Sitemap</h4>
+        <ul class="space-y-2">
+          <li><a href="/" class="hover:text-governor-bay-400 transition-colors">Home</a></li>
+          <li><a href="/work" class="hover:text-governor-bay-400 transition-colors">Selected Work</a></li>
+          <li><a href="/services" class="hover:text-governor-bay-400 transition-colors">Services & Capabilities</a></li>
+          <li><a href="/about" class="hover:text-governor-bay-400 transition-colors">About & Experience</a></li>
+          <li><a href="/blog" class="hover:text-governor-bay-400 transition-colors">Writing & Journal</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 3: Connect & Socials -->
+      <div class="space-y-3">
+        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">Connect</h4>
+        <ul class="space-y-2">
+          <li><a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="hover:text-governor-bay-400 transition-colors flex items-center gap-1.5">LinkedIn ↗</a></li>
+          <li><a href="https://github.com" target="_blank" rel="noopener noreferrer" class="hover:text-governor-bay-400 transition-colors flex items-center gap-1.5">GitHub ↗</a></li>
+          <li><a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="hover:text-governor-bay-400 transition-colors flex items-center gap-1.5">Instagram ↗</a></li>
+        </ul>
+      </div>
+
+      <!-- Column 4: Admin CMS Link & Location -->
+      <div class="space-y-3">
+        <h4 class="text-white font-semibold text-xs uppercase tracking-wider">System</h4>
+        <p class="text-xs">Location: Indonesia 🇮🇩 / Remote 🌐</p>
+        <p class="text-xs text-slate-400">Stack: Go REST API + Astro TS + GSAP</p>
+        <div class="pt-2">
+          <a
+            href="/cms/login"
+            class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-xs text-slate-300 hover:text-white border border-slate-700 transition-colors"
+          >
+            <svg class="w-3.5 h-3.5 text-governor-bay-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+            <span>CMS Admin Portal</span>
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bottom Bar -->
+    <div class="pt-8 flex flex-col sm:flex-row items-center justify-between text-xs text-slate-500 font-hero-sans gap-4">
+      <p>© {currentYear} Fadhil Abdul Fattah. All rights reserved.</p>
+      <p class="flex items-center gap-1">
+        Designed with precision & motion in Astro TS + Go
+      </p>
+    </div>
+  </div>
+</footer>

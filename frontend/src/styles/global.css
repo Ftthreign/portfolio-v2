@@ -1,55 +1,163 @@
-@import "@fontsource/playfair-display/400.css";
-@import "@fontsource/playfair-display/600.css";
-@import "@fontsource/playfair-display/700.css";
-@import "@fontsource/geist-sans/400.css";
-@import "@fontsource/geist-sans/500.css";
-@import "@fontsource/geist-sans/600.css";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@300;400;500;600;700;800&display=swap');
 
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  :root {
-    --color-bg: #FDFCF0;
-    --color-text: #2D2D2D;
-    --color-accent-terracotta: #E2725B;
-    --color-accent-sage: #8A9A5B;
-    --color-border: rgba(45, 45, 45, 0.1);
-  }
+:root {
+  --color-governor-bay-50: #eff6ff;
+  --color-governor-bay-100: #dbeafe;
+  --color-governor-bay-200: #bfdbfe;
+  --color-governor-bay-300: #93c5fd;
+  --color-governor-bay-400: #60a5fa;
+  --color-governor-bay-500: #3b82f6;
+  --color-governor-bay-600: #2563eb;
+  --color-governor-bay-700: #1d4ed8;
+  --color-governor-bay-800: #1e40af;
+  --color-governor-bay-900: #1e3a8a;
+  --color-governor-bay-950: #172554;
+}
 
+@layer base {
   html {
     scroll-behavior: smooth;
-    background-color: var(--color-bg);
-    color: var(--color-text);
-    font-family: 'Geist', system-ui, -apple-system, sans-serif;
+    font-family: 'Plus Jakarta Sans', 'Inter', system-ui, -apple-system, sans-serif;
+    background-color: #fcf8f8;
+    color: #0f172a;
     -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    transition: background-color 0.4s ease, color 0.4s ease;
+  }
+
+  html.dark {
+    background-color: #0b1120;
+    color: #f8fafc;
   }
 
   body {
-    background-color: #FDFCF0;
-    color: #2D2D2D;
-    min-height: 100vh;
     overflow-x: hidden;
+    min-height: 100vh;
   }
 
-  h1, h2, h3, h4, h5, h6 {
-    font-family: 'Playfair Display', Georgia, serif;
-    color: #2D2D2D;
+  ::selection {
+    background-color: var(--color-governor-bay-600);
+    color: #ffffff;
+  }
+
+  html.dark ::selection {
+    background-color: var(--color-governor-bay-500);
+    color: #ffffff;
   }
 }
 
-/* Custom scrollbar matching warm theme */
+/* Typography & Theme Rule Overrides */
+.font-hero-sans {
+  font-family: 'Plus Jakarta Sans', 'Inter', system-ui, sans-serif;
+}
+
+.font-hero-serif {
+  font-family: 'Playfair Display', 'Libre Caslon Text', Georgia, serif;
+}
+
+/* GSAP Rotating Role Target Theme Color Sync */
+.rotating-role-target {
+  color: #0f172a !important;
+  transition: color 0.4s ease, transform 0.4s ease, opacity 0.4s ease, filter 0.4s ease;
+}
+
+html.dark .rotating-role-target {
+  color: #93c5fd !important; /* Governor Bay 300 high contrast */
+}
+
+/* Glassmorphism Utilities */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(226, 232, 240, 0.8);
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+html.dark .glass-panel {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+}
+
+.glass-nav {
+  background: rgba(252, 248, 248, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(226, 232, 240, 0.6);
+  transition: background 0.4s ease, border-color 0.4s ease;
+}
+
+html.dark .glass-nav {
+  background: rgba(15, 23, 42, 0.85);
+  border: 1px solid rgba(30, 41, 59, 0.8);
+}
+
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 ::-webkit-scrollbar-track {
-  background: #FDFCF0;
+  background: #fcf8f8;
+}
+html.dark ::-webkit-scrollbar-track {
+  background: #0b1120;
 }
 ::-webkit-scrollbar-thumb {
-  background: rgba(45, 45, 45, 0.2);
-  border-radius: 4px;
+  background: #cbd5e1;
+  border-radius: 9999px;
+}
+html.dark ::-webkit-scrollbar-thumb {
+  background: #334155;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(45, 45, 45, 0.4);
+  background: var(--color-governor-bay-600);
+}
+
+/* Custom Magnetic Cursor follower */
+.custom-cursor {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9999;
+  width: 18px;
+  height: 18px;
+  background-color: var(--color-governor-bay-600);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.15s ease-out, width 0.2s ease, height 0.2s ease, background-color 0.2s ease, opacity 0.2s ease;
+  mix-blend-mode: difference;
+}
+
+.custom-cursor-follower {
+  pointer-events: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 9998;
+  width: 44px;
+  height: 44px;
+  border: 1.5px solid rgba(37, 99, 235, 0.5);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: transform 0.25s ease-out, width 0.3s ease, height 0.3s ease;
+}
+
+body.cursor-hover .custom-cursor {
+  width: 48px;
+  height: 48px;
+  background-color: rgba(37, 99, 235, 0.85);
+  mix-blend-mode: normal;
+}
+
+body.cursor-hover .custom-cursor-follower {
+  width: 64px;
+  height: 64px;
+  border-color: var(--color-governor-bay-600);
 }

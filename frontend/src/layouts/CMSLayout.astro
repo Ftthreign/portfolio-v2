@@ -1,0 +1,147 @@
+---
+import '../styles/global.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
+
+interface Props {
+  title?: string;
+}
+
+const { title = 'CMS Admin Panel — Ftthreign' } = Astro.props;
+---
+
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <title>{title}</title>
+
+    <!-- Inline Head Script for Zero-FOUC Dark Mode Check -->
+    <script is:inline>
+      (function() {
+        const savedTheme = localStorage.getItem('theme');
+        const systemPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (savedTheme === 'dark' || (!savedTheme && systemPrefersDark)) {
+          document.documentElement.classList.add('dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+        }
+      })();
+    </script>
+  </head>
+  <body class="bg-paper dark:bg-dark-paper text-ink dark:text-dark-ink font-mono antialiased selection:bg-acid selection:text-ink min-h-screen flex flex-col">
+    <!-- CMS Admin Header -->
+    <header class="sticky top-0 z-50 bg-paper dark:bg-dark-paper border-b border-black dark:border-dark-border">
+      <div class="max-w-container mx-auto px-4 sm:px-6 md:px-margin-page h-16 flex items-center justify-between">
+        <a href="/cms" class="font-mono font-bold text-sm sm:text-base tracking-wider text-ink dark:text-dark-ink flex items-center gap-2">
+          <span class="bg-acid text-ink dark:text-dark-paper text-xs px-2 py-0.5 font-bold uppercase">CMS ADMIN</span>
+          <span class="hidden sm:inline">Ftthreign</span>
+        </a>
+
+        <!-- Admin Nav Links -->
+        <nav class="flex items-center space-x-2 sm:space-x-4 text-xs font-mono font-bold uppercase tracking-wider">
+          <a href="/cms" class="px-2 py-1 hover:text-acid dark:hover:text-dark-acid transition-colors">Dashboard</a>
+          <a href="/cms/projects" class="px-2 py-1 hover:text-acid dark:hover:text-dark-acid transition-colors">Proyek</a>
+          <a href="/cms/blog" class="px-2 py-1 hover:text-acid dark:hover:text-dark-acid transition-colors">Blog</a>
+          <a href="/cms/messages" class="px-2 py-1 hover:text-acid dark:hover:text-dark-acid transition-colors">Pesan</a>
+        </nav>
+
+        <!-- Action & Logout -->
+        <div class="flex items-center gap-2">
+          <ThemeToggle />
+          <a href="/" class="btn-paper text-[11px] font-bold uppercase tracking-widest px-2.5 py-1.5 hidden sm:inline-block">
+            [ Web Utama ]
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main class="flex-grow">
+      <slot />
+    </main>
+
+    <!-- Admin Footer -->
+    <footer class="border-t border-black dark:border-dark-border bg-paper-neutral dark:bg-dark-paper-neutral py-6 font-mono text-xs text-muted dark:text-dark-muted">
+      <div class="max-w-container mx-auto px-4 sm:px-6 md:px-margin-page flex justify-between items-center">
+        <span>CMS ADMIN PANEL v2.0</span>
+        <a href="/" class="hover:text-ink dark:hover:text-dark-ink transition-colors">&larr; Kembali ke Website Utama</a>
+      </div>
+    </footer>
+  </body>
+</html>
+
+<script>
+  function updateAllIcons() {
+    const isDark = document.documentElement.classList.contains('dark');
+    document.querySelectorAll('[data-theme-icon="moon"]').forEach((el) => {
+      el.classList.toggle('hidden', isDark);
+    });
+    document.querySelectorAll('[data-theme-icon="sun"]').forEach((el) => {
+      el.classList.toggle('hidden', !isDark);
+    });
+  }
+
+  function setupThemeToggle() {
+    updateAllIcons();
+
+    document.addEventListener('click', (e: MouseEvent) => {
+      const target = (e.target as HTMLElement)?.closest('[data-theme-toggle]');
+      if (!target) return;
+
+      const isDark = document.documentElement.classList.contains('dark');
+      const nextThemeIsDark = !isDark;
+
+      const applyThemeState = () => {
+        if (nextThemeIsDark) {
+          document.documentElement.classList.add('dark');
+          localStorage.setItem('theme', 'dark');
+        } else {
+          document.documentElement.classList.remove('dark');
+          localStorage.setItem('theme', 'light');
+        }
+        updateAllIcons();
+      };
+
+      if (!document.startViewTransition) {
+        applyThemeState();
+        return;
+      }
+
+      const x = e.clientX || window.innerWidth / 2;
+      const y = e.clientY || 30;
+      const endRadius = Math.hypot(
+        Math.max(x, window.innerWidth - x),
+        Math.max(y, window.innerHeight - y)
+      );
+
+      const transition = document.startViewTransition(() => {
+        applyThemeState();
+      });
+
+      transition.ready.then(() => {
+        const clipPath = [
+          `circle(0px at ${x}px ${y}px)`,
+          `circle(${endRadius}px at ${x}px ${y}px)`,
+        ];
+
+        document.documentElement.animate(
+          {
+            clipPath: nextThemeIsDark ? clipPath : clipPath.reverse(),
+          },
+          {
+            duration: 450,
+            easing: 'ease-in-out',
+            pseudoElement: nextThemeIsDark
+              ? '::view-transition-new(root)'
+              : '::view-transition-old(root)',
+          }
+        );
+      });
+    });
+  }
+
+  setupThemeToggle();
+  document.addEventListener('astro:after-swap', updateAllIcons);
+</script>
