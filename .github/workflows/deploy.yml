@@ -21,11 +21,12 @@ jobs:
           host: ${{ secrets.VPS_HOST }}
           username: ${{ secrets.VPS_USER }}
           key: ${{ secrets.VPS_SSH_KEY }}
-          port: ${{ secrets.VPS_PORT || 22 }}
+          port: ${{ secrets.VPS_PORT }}
           script: |
             set -e
+            export GIT_TERMINAL_PROMPT=0
 
-            REPO_URL="https://x-access-token:${{ secrets.DEPLOY_TOKEN }}@github.com/${{ github.repository }}.git"
+            REPO_URL="https://github.com/Ftthreign/portfolio-v2.git"
 
             if [ ! -d "$HOME/portfolio-v2" ]; then
               git clone "$REPO_URL" "$HOME/portfolio-v2"
