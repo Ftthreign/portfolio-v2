@@ -9,9 +9,11 @@ import LatestBlog from '../components/LatestBlog.astro';
 import SkillsSection from '../components/SkillsSection.astro';
 import { fetchProjects, fetchProfile, fetchBlogPosts } from '../services/api';
 
-const profile = await fetchProfile();
-const projects = await fetchProjects();
-const blogPosts = await fetchBlogPosts();
+const [profile, projects, blogPosts] = await Promise.all([
+  fetchProfile(),
+  fetchProjects(),
+  fetchBlogPosts(),
+]);
 const featuredProjects = projects.slice(0, 4);
 const latestBlogPosts = blogPosts.slice(0, 3);
 ---

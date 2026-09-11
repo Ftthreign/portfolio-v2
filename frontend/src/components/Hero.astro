@@ -28,8 +28,13 @@ const { name = "Fadhil Abdul Fattah" } = Astro.props;
 
     <div class="hero-portrait hero-anim-item relative -mt-6 sm:-mt-12 md:-mt-16 lg:-mt-20 z-10 flex justify-center pointer-events-none">
       <img
-        src="/sketch_me.png"
+        src="/sketch_me.webp"
         alt={name}
+        width="1024"
+        height="1536"
+        loading="eager"
+        fetchpriority="high"
+        decoding="async"
         class="h-[260px] sm:h-[380px] md:h-[460px] lg:h-[520px] xl:h-[560px] w-auto object-contain drop-shadow-xl transition-transform"
       />
     </div>
@@ -70,11 +75,12 @@ const { name = "Fadhil Abdul Fattah" } = Astro.props;
 <script>
   import { initHeroInteractiveAnimations } from '../utils/gsap';
 
-  document.addEventListener('DOMContentLoaded', () => {
-    initHeroInteractiveAnimations();
-  });
+  const runHeroAnimations = () => {
+    requestAnimationFrame(() => {
+      initHeroInteractiveAnimations();
+    });
+  };
 
-  document.addEventListener('astro:page-load', () => {
-    initHeroInteractiveAnimations();
-  });
+  document.addEventListener('DOMContentLoaded', runHeroAnimations);
+  document.addEventListener('astro:page-load', runHeroAnimations);
 </script>

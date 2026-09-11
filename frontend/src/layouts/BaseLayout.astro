@@ -27,9 +27,13 @@ const {
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
 
+    <link rel="preload" as="image" href="/sketch_me.webp" type="image/webp" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@300;400;500;600;700;800&display=swap" media="print" onload="this.media='all'" />
+    <noscript>
+      <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Plus+Jakarta+Sans:ital,wght@0,300..800;1,300..800&family=Inter:wght@300;400;500;600;700;800&display=swap" />
+    </noscript>
 
     <script is:inline>
       const theme = localStorage.getItem('theme');
@@ -55,15 +59,22 @@ const {
     <script>
       import { initCustomCursor, initScrollReveals } from '../utils/gsap';
 
-      document.addEventListener('DOMContentLoaded', () => {
-        initCustomCursor();
-        initScrollReveals();
-      });
+      const runAnimations = () => {
+        if ('requestIdleCallback' in window) {
+          requestIdleCallback(() => {
+            initCustomCursor();
+            initScrollReveals();
+          });
+        } else {
+          requestAnimationFrame(() => {
+            initCustomCursor();
+            initScrollReveals();
+          });
+        }
+      };
 
-      document.addEventListener('astro:page-load', () => {
-        initCustomCursor();
-        initScrollReveals();
-      });
+      document.addEventListener('DOMContentLoaded', runAnimations);
+      document.addEventListener('astro:page-load', runAnimations);
     </script>
   </body>
 </html>
