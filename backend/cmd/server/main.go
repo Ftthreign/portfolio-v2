@@ -94,6 +94,15 @@ func main() {
 
 	// Public REST API Endpoints (For Astro SSR)
 	r.Route("/api/v1", func(r chi.Router) {
+		r.Use(func(next http.Handler) http.Handler {
+			return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.Method == http.MethodGet {
+					w.Header().Set("Cache-Control", "public, max-age=60, s-maxage=300")
+				}
+				next.ServeHTTP(w, r)
+			})
+		})
+
 		r.Get("/profile", func(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("Content-Type", "application/json")
 			profile, err := db.GetProfile(r.Context())

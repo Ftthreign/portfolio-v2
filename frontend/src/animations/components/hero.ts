@@ -52,15 +52,15 @@ export function initHeroInteractiveAnimations(): (() => void) | undefined {
     const charSpans = heroTitle.querySelectorAll(".char-span");
     gsap.fromTo(
       charSpans,
-      { opacity: 0, y: 40, rotateX: -60 },
+      { opacity: 0.3, y: 15, rotateX: -20 },
       {
         opacity: 1,
         y: 0,
         rotateX: 0,
-        duration: DURATIONS.slow,
-        stagger: 0.03,
-        ease: EASE_PRESETS.springBounce,
-        delay: 0.2,
+        duration: 0.35,
+        stagger: 0.015,
+        ease: EASE_PRESETS.powerOut,
+        delay: 0.05,
       },
     );
   }
@@ -102,12 +102,12 @@ export function initHeroInteractiveAnimations(): (() => void) | undefined {
   if (animItems.length > 0) {
     gsap.fromTo(
       animItems,
-      { opacity: 0, y: 35 },
+      { opacity: 0.5, y: 15 },
       {
         opacity: 1,
         y: 0,
-        duration: DURATIONS.entrance,
-        stagger: 0.12,
+        duration: 0.4,
+        stagger: 0.05,
         ease: EASE_PRESETS.smoothOut,
       },
     );
